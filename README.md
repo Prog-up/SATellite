@@ -5,6 +5,7 @@ Satellite is a SAT-solver.
 ### Linux
 Download the project, go to project's root, and run the file `build.sh` :
 ```bash
+chmod u+x build.sh
 ./build.sh
 ```
 
@@ -22,8 +23,38 @@ Once compiled, go to the folder `build`, open a terminal, and you can use the ex
 Todo (add parser help)
 (explain output)
 
+### Command line arguments
+```bash
+./SATellite -h
+Usage : ./SATellite [-h] [-v] [-a ALGO] [-H HEUR] FILE
+
+Show whatever the input formula is satisfiable, and if so, show a model of it.
+
+Positional arguments :
+    FILE                         Path to a cnf formula encoded in DIMACS format
+
+Optional arguments :
+    -h, --help                   Show this help message and exit
+    -v, --version                Show version and exit
+    -a ALGO, --algorithm ALGO    Select the algorithm used. Currently, 'quine'
+                                 and 'dpll' are available. Default is 'quine'.
+    -H HEUR, --heuristic HEUR    Select an heuristic for DPLL algorithm.
+                                 Currently, 'random', 'freq', ??? are available.
+                                 Ignored if ALGO is not 'dpll'.
+```
+
+### Heuristic description
+- `random` : select randomly a literal ;
+- `freq` : select the most frequent literal to build a model ;
+...
+
+### Output description
+Todo
+
 ## Implementation choices
 ### Data structure
+
+We represent the literals as integer (positive for a variable, negative for its negation).
 
 To represent formulae under cnf, we use two nested structures :
 - `clause` which represent a clause. It contain an int list (the literal list) and the size of the list ;

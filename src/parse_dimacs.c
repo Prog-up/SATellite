@@ -98,7 +98,7 @@ void print_CNF(CNF* f) {
         printf("(");
         for (int j = 0 ; j < f->clause_list[i].n ; j++) {
             if (f->clause_list[i].literals[j] < 0)
-                printf("-x_%d", -(f->clause_list[i].literals[j]));
+                printf("¬x_%d", -(f->clause_list[i].literals[j]));
             else
                 printf("x_%d", f->clause_list[i].literals[j]);
             

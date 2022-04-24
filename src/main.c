@@ -1,12 +1,19 @@
 //------------------------------
-// Include all files and and
-// parse command line arguments.
+// Include all files, parse
+// command line arguments, and
+// execute right functions.
 //------------------------------
 
+//---Includes
 #include <stdio.h>
+#include <string.h>
 #include "../include/parse_dimacs.h"
 
-void test0(char* fn) {
+//---Ini
+char version[] = "v1.0";
+
+//---Tests
+void test0(char* fn) { //TODO: Remove this function for final version
     /*Testing parse_dimacs*/
     
     CNF* f = parse_cnf(fn);
@@ -14,8 +21,60 @@ void test0(char* fn) {
     free_CNF(f);
 }
 
-int main(int argc, char** argv) {
+//-Parser
+void print_usage(char* argv0) {
+    printf("Usage : %s [-h] [-v] [-a ALGO] [-H HEUR] FILE\n", argv0);
+}
+
+void print_help(char* argv0) {
+    /*
+    Print the help message for the command line parser.
     
-    test0(argv[1]);
+    - argv0 : program name (argv[0] in the main function).
+    */
+
+    print_usage(argv0);
+
+    printf("\nShow whatever the input formula is satisfiable, and if so, show a model of it.\n");
+
+    printf("\nPositional arguments :\n");
+    printf("\tFILE                         Path to a cnf formula encoded in DIMACS format\n");
+
+    printf("\nOptional arguments :");
+    printf("\t-h, --help                   Show this help message and exit\n");
+    printf("\t-v, --version                Show version and exit\n");
+    printf("\t-a ALGO, --algorithm ALGO    Select the algorithm used. Currently, 'quine'\n                                 and 'dpll' are available. Default is 'quine'.\n");
+    printf("\t-H HEUR, --heuristic HEUR    Select an heuristic for DPLL algorithm.\n                                 Currently, 'random', 'freq', ??? are available.\n                                 Ignored if ALGO is not 'dpll'.\n");
+}
+
+int parse(int argc, char** argv) {
+    /*Parse command line arguments and execute right functions.*/
+
+    if (argc == 1) { //No arguments
+        print_usage(argv[0]);
+        printf("SATellite: error: the following argument is requied: FILE\n");
+        return 0;
+    }
+
+    for (int k = 1 ; k < argc ; k++) {
+        if (strcmp(argv[k], "-h") == 0 || strcmp(argv[k], "--help") == 0) { //Help
+            print_help(argv[0]);
+            return 0;
+        }
+        else if (strcmp(argv[k], "-v") == 0 || strcmp(argv[k], "--version") == 0) { //Version
+            printf("Version : %s\n", version);
+            return 0;
+        }
+        //TODO
+    }
+
     return 0;
+}
+
+
+int main(int argc, char** argv) {
+    //test0(argv[1]);
+
+    //---Parser
+    return parse(argc, argv);
 }
