@@ -1,6 +1,8 @@
 # Satellite
 Satellite is a SAT-solver.
 
+<img src="Style/satellite_white_surround.png" alt="Satellite_logo" width="300"/>
+
 ## Installing
 ### Linux
 Download the project, go to project's root, and run the file `build.sh` :
@@ -20,11 +22,8 @@ Note : you need to have `gcc.exe` installed on your computer, and added to the `
 Once compiled, go to the folder `build`, open a terminal, and you can use the executable `SATellite` (or `SATellite.exe` on windows).
 
 ## Usage
-Todo (add parser help)
-(explain output)
-
 ### Command line arguments
-```bash
+```
 ./SATellite -h
 Usage : ./SATellite [-h] [-v] [-a ALGO] [-H HEUR] FILE
 
@@ -46,6 +45,7 @@ Optional arguments :
 ### Heuristic description
 - `random` : select randomly a literal ;
 - `freq` : select the most frequent literal to build a model ;
+
 ...
 
 ### Output description
