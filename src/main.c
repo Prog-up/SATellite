@@ -22,6 +22,10 @@ void test0(char* fn) { //TODO: Remove this function for final version
 }
 
 //-Parser
+void print_logo() {
+    printf("\n                            ^JY55Y?~.             \n                            ^JJJJ?JYG#5.          \n          .                  7PYYPGGJ^J@P         \n        7&&#~                 !YY?^:5@?.&&        \n      ?&#^ 7&&~          ?!   :7!?&B ^@?.@P       \n    ?@#:     !&&!      .&&#&7 J@@^.@P #@ #&       \n    ~&&!       ~#&7    Y@. ^B&@5~  5^ &G @#       \n      ^#&?       Y@G.JP&@?   :G#7        7.       \n        ^B&J   ^B@PB&P^.J@B~...J@&.               \n          :B&5B&#@&5.     5@&GGP?.                \n            .YPB&Y.      .G@.                     \n            .G&?       :G&GP5.                    \n            ^&&!     ^B@@B&P5&G:                  \n             .&@&? ^#&PB@5.   Y&B:                \n            5&5.^B&&!.&@!       J&B^              \n            ~.    .    7&#^       7&#^            \n                         7&#~     !&&^            \n                           !&&! ?&#^              \n                             ~#&B:                \n                               .\n");
+}
+
 void print_usage(char* argv0) {
     printf("Usage : %s [-h] [-v] [-a ALGO] [-H HEUR] FILE\n", argv0);
 }
@@ -32,6 +36,8 @@ void print_help(char* argv0) {
     
     - argv0 : program name (argv[0] in the main function).
     */
+
+    print_logo();
 
     print_usage(argv0);
 
@@ -47,10 +53,12 @@ void print_help(char* argv0) {
     printf("\t-H HEUR, --heuristic HEUR    Select an heuristic for DPLL algorithm.\n                                 Currently, 'random', 'freq', ??? are available.\n                                 Ignored if ALGO is not 'dpll'.\n");
 }
 
+
 int parse(int argc, char** argv) {
     /*Parse command line arguments and execute right functions.*/
 
     if (argc == 1) { //No arguments
+        print_logo();
         print_usage(argv[0]);
         printf("SATellite: error: the following argument is requied: FILE\n");
         return 0;
