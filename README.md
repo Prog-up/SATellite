@@ -14,9 +14,9 @@ chmod u+x build.sh
 Note : you need to have `gcc` installed on your computer.
 
 ### Windows
-Download the project, go to project's root, and execute the file `build.bat`.
+Download the project, go to project's root, and execute the file `build.sh` with `Cygwin`.
 
-Note : you need to have `gcc.exe` installed on your computer, and added to the `PATH` variable.
+Note : you need to have `Cygwin` installed on your computer.
 
 ### Running
 Once compiled, go to the folder `build`, open a terminal, and you can use the executable `SATellite` (or `SATellite.exe` on windows).
