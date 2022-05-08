@@ -16,7 +16,7 @@ Note : you need to have `gcc` installed on your computer.
 ### Windows
 Download the project, go to project's root, and execute the file `build.sh` with `Cygwin`.
 
-Note : you need to have `Cygwin` installed on your computer.
+Note : you need to have [Cygwin](https://www.cygwin.com) installed with `gcc` on your computer.
 
 ### Running
 Once compiled, go to the folder `build`, open a terminal, and you can use the executable `SATellite` (or `SATellite.exe` on windows).
@@ -35,11 +35,14 @@ Positional arguments :
 Optional arguments :
     -h, --help                   Show this help message and exit
     -v, --version                Show version and exit
-    -a ALGO, --algorithm ALGO    Select the algorithm used. Currently, 'quine'
-                                 and 'dpll' are available. Default is 'quine'.
+    -a ALGO, --algorithm ALGO    Select solver algorithm. Default is 'quine'
+        'quine'
+        'dpll'
+        
     -H HEUR, --heuristic HEUR    Select an heuristic for DPLL algorithm.
-                                 Currently, 'random', 'freq', ??? are available.
-                                 Ignored if ALGO is not 'dpll'.
+        'random'                 Ignored if ALGO is not 'dpll'.
+        'freq'
+                                 
 ```
 
 ### Heuristic description

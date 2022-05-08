@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 #include "../include/parse_dimacs.h"
 // #include "../include/types.h" //Already included in header file
 
@@ -21,6 +22,7 @@ CNF* parse_cnf(char* fn) {
     FILE* file = fopen(fn, "r");
     if (file == NULL) {
         printf("Satellite: parse_dimacs: Error while opening file '%s'\n", fn);
+        perror(fn);
         return NULL;
     }
     
