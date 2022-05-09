@@ -7,6 +7,7 @@
 //---Includes
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 #include "../include/parse_dimacs.h"
 
 //---Ini
@@ -44,24 +45,36 @@ void print_help(char* argv0) {
     printf("\nShow whatever the input formula is satisfiable, and if so, show a model of it.\n");
 
     printf("\nPositional arguments :\n");
-    printf("\tFILE                         Path to a cnf formula encoded in DIMACS format\n");
+    printf("    FILE                         Path to a cnf formula encoded in DIMACS format\n");
 
-    printf("\nOptional arguments :");
-    printf("\t-h, --help                   Show this help message and exit\n");
-    printf("\t-v, --version                Show version and exit\n");
-    printf("\t-a ALGO, --algorithm ALGO    Select the algorithm used. Currently, 'quine'\n                                 and 'dpll' are available. Default is 'quine'.\n");
-    printf("\t-H HEUR, --heuristic HEUR    Select an heuristic for DPLL algorithm.\n                                 Currently, 'random', 'freq', ??? are available.\n                                 Ignored if ALGO is not 'dpll'.\n");
+    printf("\nOptional arguments :\n");
+    printf("    -h, --help                   Show this help message and exit\n");
+    printf("    -v, --version                Show version and exit\n");
+    printf("    -a ALGO, --algorithm ALGO    Select the algorithm used. Default is 'quine'\n");
+    printf("        'quine'\n");
+    printf("        'dpll'\n");
+    printf("\n    -H HEUR, --heuristic HEUR    Select an heuristic for DPLL algorithm.\n");
+    printf("        'random'                 Ignored if ALGO is not 'dpll'.\n");
+    printf("        'freq'\n");
 }
 
 
 int parse(int argc, char** argv) {
-    /*Parse command line arguments and execute right functions.*/
+    /*Parse command line arguments and execute associated functions.*/
+
+    char algo[6] = "quine";
+    char heur[16];
+    char fn[255];
+
+    bool file_is_def = false;
+    bool algo_is_def = false;
+    bool heur_is_def = false;
 
     if (argc == 1) { //No arguments
         print_logo();
         print_usage(argv[0]);
         printf("SATellite: error: the following argument is requied: FILE\n");
-        return 0;
+        return -1;
     }
 
     for (int k = 1 ; k < argc ; k++) {
@@ -70,11 +83,63 @@ int parse(int argc, char** argv) {
             return 0;
         }
         else if (strcmp(argv[k], "-v") == 0 || strcmp(argv[k], "--version") == 0) { //Version
-            printf("Version : %s\n", version);
+            printf("SATellite version : %s\n", version);
             return 0;
         }
-        //TODO
+        else if (strcmp(argv[k], "-a") == 0 || strcmp(argv[k], "--algorithm") == 0) { //Algorithm
+            if (algo_is_def) {
+                printf("SATellite: error: too many arguments (argument -a/--algorithm repeated)\n");
+                return -1;
+            }
+
+            if (k + 1 >= argc) {
+                printf("SATellite: error: argument -a/--algorithm: expected one argument ALGO\n");
+                return -1;
+            }
+            if (strcmp(argv[k + 1], "quine") !=0 && strcmp(argv[k + 1], "dpll") != 0) {
+                printf("SATellite: error: argument -a/--algorithm: value should be 'quine' or 'dpll', but '%s' was found\n", argv[k + 1]);
+                return -1;
+            }
+
+            strcpy(algo, argv[k + 1]);
+            k++; // Jump the next value (it is algo).
+
+            algo_is_def = true;
+        }
+        else if (strcmp(argv[k], "-H") == 0 || strcmp(argv[k], "--heuristic") == 0) { //Heuristic
+            if (heur_is_def) {
+                printf("SATellite: error: too many arguments (argument -H/--heuristic repeated)\n");
+                return -1;
+            }
+            if (k + 1 >= argc) {
+                printf("SATellite: error: argument -H/--heuristic: expected one argument HEUR\n");
+                return -1;
+            }
+            if (strcmp(argv[k + 1], "random") !=0 && strcmp(argv[k + 1], "freq") != 0) { //TODO: update heuristic list
+                printf("SATellite: error: argument -H/--heuristic: value should be 'random' or 'freq', but '%s' was found\n", argv[k + 1]); //TODO: also here
+                return -1;
+            }
+
+            strcpy(heur, argv[k + 1]);
+            k++; // Jump the next value (it is heur).
+
+            heur_is_def = true;
+        }
+        else { //File
+            if (file_is_def) {
+                printf("SATellite: error: too many arguments\n");
+                return -1;
+            }
+            
+            strcpy(fn, argv[k]);
+
+            file_is_def = true;
+        }
     }
+    
+    //TODO: use function according to defined arguments
+
+    //CNF* f = parse_cnf(fn);
 
     return 0;
 }
