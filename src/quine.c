@@ -1,6 +1,7 @@
 //Temporaly location
 // n = clause lenght of f = cc or varc?
-bool quine(CNF f, int n) {
+
+/* bool quine(CNF f, int n) {
     if (f[0] = []){
         return true;
     } else {
@@ -16,4 +17,4 @@ bool quine(CNF f, int n) {
             return quine(res2)
         }
     }
-};
+}; */

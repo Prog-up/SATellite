@@ -8,21 +8,23 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+
 #include "../include/parse_dimacs.h"
+#include "../include/types.h"
 
 //---Ini
 char version[] = "v1.0";
 
 //---Tests
-void test0(char* fn) { //TODO: Remove this function for final version
-    /*Testing parse_dimacs*/
+/* void test0(char* fn) { //TODO: Remove this function for final version
+    /*Testing parse_dimacs* /
     
     CNF* f = parse_cnf(fn);
     print_CNF(f);
     free_CNF(f);
-}
+} */
 
-//-Parser
+//---Parser
 void print_logo() {
     printf("\n                            ^JY55Y?~.             \n                            ^JJJJ?JYG#5.          \n          .                  7PYYPGGJ^J@P         \n        7&&#~                 !YY?^:5@?.&&        \n      ?&#^ 7&&~          ?!   :7!?&B ^@?.@P       \n    ?@#:     !&&!      .&&#&7 J@@^.@P #@ #&       \n    ~&&!       ~#&7    Y@. ^B&@5~  5^ &G @#       \n      ^#&?       Y@G.JP&@?   :G#7        7.       \n        ^B&J   ^B@PB&P^.J@B~...J@&.               \n          :B&5B&#@&5.     5@&GGP?.                \n            .YPB&Y.      .G@.                     \n            .G&?       :G&GP5.                    \n            ^&&!     ^B@@B&P5&G:                  \n             .&@&? ^#&PB@5.   Y&B:                \n            5&5.^B&&!.&@!       J&B^              \n            ~.    .    7&#^       7&#^            \n                         7&#~     !&&^            \n                           !&&! ?&#^              \n                             ~#&B:                \n                               .\n");
 }
@@ -139,7 +141,9 @@ int parse(int argc, char** argv) {
     
     //TODO: use function according to defined arguments
 
-    //CNF* f = parse_cnf(fn);
+    CNF* f = parse_cnf(fn);
+    //print_CNF(f);
+    //free_CNF(f);
 
     return 0;
 }
