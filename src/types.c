@@ -68,6 +68,25 @@ struct CNF_clause* Clause_arr_to_CNF_clause(Clause* arr, int n) {
 }
 
 
+Clause del(Clause c, int x) {
+    /*Remove all occurences of `x` in the clause c.*/
+
+    if (c == NULL)
+        return c;
+    
+    if (c->l == x) {
+        Clause t = c;
+        c = t->next;
+        free(t);
+        return del(c, x);
+    }
+
+    c->next = del(c->next, x);
+
+    return c;
+}
+
+
 void print_CNF(CNF* f) {
     /*Output to stdout the formula.*/
 
@@ -103,6 +122,21 @@ void print_CNF(CNF* f) {
         
         f0 = f0->next;
     }
+}
+
+
+void print_Clause(Clause c) {
+    while (true) {
+        if (c == NULL)
+            break;
+        else
+            printf(" || ");
+        
+        printf("%d", c->l);
+
+        c = c->next;
+    }
+    printf("\n");
 }
 
 
