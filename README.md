@@ -25,7 +25,7 @@ Once compiled, go to the folder `build`, open a terminal, and you can use the ex
 ### Command line arguments
 ```
 ./SATellite -h
-Usage : ./SATellite [-h] [-v] [-a ALGO] [-H HEUR] FILE
+Usage : ./SATellite [-h] [-v] [-d] [-a ALGO] [-H HEUR] FILE
 
 Show whatever the input formula is satisfiable, and if so, show a model of it.
 
@@ -35,6 +35,7 @@ Positional arguments :
 Optional arguments :
     -h, --help                   Show this help message and exit
     -v, --version                Show version and exit
+    -d, --display                Print the formula to the screen and exit
     -a ALGO, --algorithm ALGO    Select solver algorithm. Default is 'quine'
         'quine'
         'dpll'
@@ -59,9 +60,9 @@ Todo
 
 We represent the literals as integer (positive for a variable, negative for its negation).
 
-To represent formulae under cnf, we use two nested structures :
-- `clause` which represent a clause. It contain an int list (the literal list) and the size of the list ;
-- `CNF` which represent the formula. It contain a clause list, the clause count and the variable count.
+To represent formulae under cnf, we use two nested lists, surrounded by a struct :
+- `Clause` : a litteral list ;
+- `CNF` : a struct containing a `Clause` list, the clause count, and the variable count.
 
 
 ## Authors
