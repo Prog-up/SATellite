@@ -3,34 +3,15 @@
 // the project.
 //------------------------------
 
+//---Include
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
+
 #include "../include/types.h"
 
-/* CNF* create_CNF(int size) {
-    /*Return a CNF struct. Allocate every clause. Set `f` and `cc`, but not `varc` in the CNF struct.* /
 
-    struct CNF_clause* f = NULL;
-    struct CNF_clause* q = NULL;
-
-    for (int k = 0 ; k < size ; k++) {
-        f = (struct CNF_clause*) malloc(sizeof(struct CNF_clause));
-        if (f == NULL) {
-            printf("SATellite: types: cannot allocate memory (in create_CNF)\n");
-            return NULL;
-        }
-
-        f->next = q;
-        q = f;
-    }
-
-    CNF* cnf;
-    cnf->f = f;
-    cnf->cc = size;
-
-    return cnf;
-} */
-
+//---Functions
 Clause arr_to_Clause(int* arr, int n) {
     /*
     Convert an int array into a Clause struct.
@@ -57,6 +38,7 @@ Clause arr_to_Clause(int* arr, int n) {
 
     return c;
 }
+
 
 struct CNF_clause* Clause_arr_to_CNF_clause(Clause* arr, int n) {
     /*
@@ -85,5 +67,61 @@ struct CNF_clause* Clause_arr_to_CNF_clause(Clause* arr, int n) {
     return cl;
 }
 
-//TODO : free_CNF
-//TODO : print_CNF
+
+void print_CNF(CNF* f) {
+    /*Output to stdout the formula.*/
+
+    printf("Clause count : %d\nVariable count : %d\n\n", f->cc, f->varc);
+    
+    struct CNF_clause* f0 = f->f;
+
+    while (true) {
+        if (f0 == NULL)
+            return;
+        
+        Clause c = f0->c;
+        printf("(");
+        while (true) {
+            if (c == NULL)
+                break;
+            
+            if (c->l < 0)
+                printf("¬x_%d", c->l);
+            else
+                printf("x_%d", c->l);
+            
+            if (c->next != NULL)
+                printf(" ∨ "); // \wedge : ∨
+            
+            c = c->next;
+        }
+
+        if (f0->next != NULL)
+            printf(")\n∧\n");
+        else
+            printf(")\n");
+        
+        f0 = f0->next;
+    }
+}
+
+
+void free_CNF(CNF* f) {
+    /*Free a CNF* var.*/
+
+    struct CNF_clause* f0 = f->f;
+    Clause c = f0->c;
+    Clause c1;
+    while (true) {
+        if (c == NULL)
+            break;
+
+        c1 = c->next;
+        free(c);
+        c = c1;
+    }
+
+    free(f0);
+
+    free(f);
+}

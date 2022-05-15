@@ -25,4 +25,7 @@ typedef struct {
 Clause arr_to_Clause(int* arr, int n);
 struct CNF_clause* Clause_arr_to_CNF_clause(Clause* arr, int n);
 
+void print_CNF(CNF* f);
+void free_CNF(CNF* f);
+
 #endif

@@ -51,12 +51,6 @@ CNF* parse_cnf(char* fn) {
     int nb_var, nb_c; // Variables and clauses count.
     fscanf(file, "%d%d", &nb_var, &nb_c);
 
-    //---Create the formula
-    //CNF* formula = create_CNF(nb_c);
-    //formula->varc = nb_var;
-
-    //struct CNF_clause* f = formula->f;
-
 
     //------Read the formula
     char fst; //To test if there is a comment
@@ -94,8 +88,6 @@ CNF* parse_cnf(char* fn) {
         }
 
         Clause cl = arr_to_Clause(lit_list, nb);
-        //f->c = cl;
-        //f = f->next;
         cl_list[k] = cl;
     }
 
@@ -110,38 +102,3 @@ CNF* parse_cnf(char* fn) {
 
     return formula;
 }
-
-
-/* void print_CNF(CNF* f) {
-    /*Print a formula represented by `f`.* /
-    
-    for (int i = 0 ; i < f->cc ; i++) {
-        printf("(");
-        for (int j = 0 ; j < f->clause_list[i].n ; j++) {
-            if (f->clause_list[i].literals[j] < 0)
-                printf("¬x_%d", -(f->clause_list[i].literals[j]));
-            else
-                printf("x_%d", f->clause_list[i].literals[j]);
-            
-            if (j != f->clause_list[i].n - 1)
-                printf(" ∨ "); // \wedge : ∨
-        }
-
-        if (i != f->cc - 1)
-            printf(")\n∧\n");
-        else
-            printf(")\n");
-    }
-}
-
-
-void free_CNF(CNF* f) {
-    /*Free a CNF struct.* /
-
-    for (int k = 0 ; k < f->cc ; k++) {
-        free(f->clause_list[k].literals);
-    }
-
-    free(f->clause_list);
-    free(f);
-} */
