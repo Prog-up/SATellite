@@ -94,7 +94,9 @@ struct CNF_clause* del_clause(struct CNF_clause* f) {
     }
 
     struct CNF_clause* ret = f->next;
-    //free(f);
+
+    free_clause(f->c);
+    free(f);
 
     return ret;
 }
@@ -121,7 +123,7 @@ void print_CNF_clause_lst(struct CNF_clause* f0) {
         printf("(");
         while (c != NULL) {
             if (c->l < 0)
-                printf("¬x_%d", c->l);
+                printf("¬x_%d", -c->l);
             else
                 printf("x_%d", c->l);
             
@@ -165,21 +167,29 @@ void free_clause(Clause c) {
     }
 }
 
+//---Free Clause list
+void free_clause_list(struct CNF_clause* f0) {
+    /*Free a struct CNF_clause* list.*/
+
+    struct CNF_clause* f1;
+
+    while (f0 != NULL) {
+        f1 = f0->next;
+        free_clause(f0->c);
+        free(f0);
+        f0 = f1;
+    }
+}
+
 //---Free CNF
 void free_CNF(CNF* formula) {
     /*Free a CNF* struct.*/
 
     struct CNF_clause* f = formula->f;
-    struct CNF_clause* f1;
-
-    while (f != NULL) {
-        f1 = f->next;
-        free_clause(f->c);
-        free(f);
-        f = f1;
-    }
     
-    free(f);
+    free_clause_list(f);
+
+    free(formula);
 }
 
 //------Copy
@@ -216,7 +226,6 @@ Clause copy_clause(Clause c) {
 CNF* copy_CNF_0(CNF* formula) {
     /*Return a copy of `formula`, but swap order.*/
 
-    //CNF* f = NULL;
     struct CNF_clause* f = formula->f;
     struct CNF_clause* f0 = NULL;
 
@@ -262,5 +271,54 @@ CNF* eval(CNF* formula, int x, bool v) {
         the formula, where all clause where there is `x` are removed, and where -`x` is removed from all clauses.
     */
 
-    return formula;
+    CNF* f_cpy = copy_CNF(formula);
+
+    struct CNF_clause* f = f_cpy->f;
+    struct CNF_clause* f0 = f;
+
+    if (f == NULL) {
+        return f_cpy;
+    }
+
+    while (f->next != NULL) {
+        Clause c = f->next->c;
+
+        bool go_next = true;
+        while (c != NULL) {
+            if (c->l == x) {
+                //f = del_clause(f); //TODO: link f and f->next->next
+
+                /* struct CNF_clause* t = f->next;
+                f->next = f->next->next;
+                free_clause(t->c);
+                free(t); */
+
+                //TODO: There is a segfault somewhere here, maybe try with f->next and the above thing to remove a clause from the clause list.
+
+
+                /* print_CNF_clause_lst(f);
+                printf("---\n"); */
+                f_cpy->cc--;
+                go_next = false;
+                break;
+            }
+
+            if (c->l == -x) {
+                c = del_literal(c, -x);
+            }
+
+            c = c->next;
+
+            print_CNF_clause_lst(f0);
+        }
+
+        if (go_next)
+            f = f->next;
+    }
+
+    f_cpy->f = f0;
+    f_cpy->varc--;
+
+    return f_cpy;
+
 }

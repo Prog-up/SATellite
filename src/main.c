@@ -149,9 +149,9 @@ int parse(int argc, char** argv) {
     }
 
     //---------Tests---------
-    CNF* f2 = copy_CNF(f);
-    print_CNF(f2);
-    free_CNF(f2);
+    CNF* f1 = eval(f, 1, true);
+    print_CNF(f1);
+    free_CNF(f1);
     //-----------------------
 
     free_CNF(f);

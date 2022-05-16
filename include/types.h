@@ -39,10 +39,15 @@ void print_CNF(CNF* f);
 void print_CNF_clause_lst(struct CNF_clause* f0);
 
 //---Free
+void free_clause(Clause c);
+void free_clause_list(struct CNF_clause* f0);
 void free_CNF(CNF* f);
 
-//---Eval
+//---Copy
+Clause copy_clause(Clause c);
 CNF* copy_CNF(CNF* formula);
+
+//---Eval
 CNF* eval(CNF* formula, int x, bool v);
 
 #endif

@@ -53,7 +53,7 @@ CNF* parse_cnf(char* fn) {
 
 
     //------Read the formula
-    char fst; //To test if there is a comment
+    char fst[255]; //To test if there is a comment
     int t, nb; //t : temp var for numbers, nb : number of literals in this clause
     int lit_list[nb_var]; //temp clause, there is at max `nb_var`s literals in each clause.
 
@@ -61,12 +61,14 @@ CNF* parse_cnf(char* fn) {
 
     for (int k = 0 ; k < nb_c ; k++) {
         //---Check if there is not comment
-        fst = fgetc(file);
-        while (fst == '\n') {
-            fst = fgetc(file);
+        //fst = fgetc(file);
+        fscanf(file, "%s", fst);
+        while (strcmp(fst, "\n") == 0) {
+            //fst = fgetc(file);
+            fscanf(file, "%s", fst);
         }
 
-        if (fst == 'c') {
+        if (strcmp(fst, "c") == 0) {
             //Remove the line
             char garbage = fgetc(file);
             while (garbage != '\n') {
@@ -76,7 +78,7 @@ CNF* parse_cnf(char* fn) {
             continue; //go to the next iteration of the loop, this line is a comment.
         }
         else {
-            t = (int) fst - '0';
+            t = atoi(fst);
         }
 
         //---Add var to temporary clause array
