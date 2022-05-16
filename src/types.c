@@ -11,13 +11,13 @@
 #include "../include/types.h"
 
 
-//---Functions
+//------Converting functions
 Clause arr_to_Clause(int* arr, int n) {
     /*
     Convert an int array into a Clause struct.
     
     - arr : the array ;
-    - n : the array's size.
+    - n   : the array's size.
     */
 
     Clause c = NULL;
@@ -39,13 +39,12 @@ Clause arr_to_Clause(int* arr, int n) {
     return c;
 }
 
-
 struct CNF_clause* Clause_arr_to_CNF_clause(Clause* arr, int n) {
     /*
     Convert a Clause array to a struct CNF_clause* list.
     
     - arr : the Clause array ;
-    - n : the array's size.
+    - n   : the array's size.
     */
 
     struct CNF_clause* cl = NULL;
@@ -68,7 +67,8 @@ struct CNF_clause* Clause_arr_to_CNF_clause(Clause* arr, int n) {
 }
 
 
-Clause del(Clause c, int x) {
+//------Deleting functions
+Clause del_literal(Clause c, int x) {
     /*Remove all occurences of `x` in the clause c.*/
 
     if (c == NULL)
@@ -78,32 +78,48 @@ Clause del(Clause c, int x) {
         Clause t = c;
         c = t->next;
         free(t);
-        return del(c, x);
+        return del_literal(c, x);
     }
 
-    c->next = del(c->next, x);
+    c->next = del_literal(c->next, x);
 
     return c;
 }
 
+struct CNF_clause* del_clause(struct CNF_clause* f) {
+    /*Return f with the first clause removed*/
 
-void print_CNF(CNF* f) {
-    /*Output to stdout the formula.*/
+    if (f == NULL) {
+        return NULL;
+    }
 
-    printf("Clause count : %d\nVariable count : %d\n\n", f->cc, f->varc);
-    
-    struct CNF_clause* f0 = f->f;
+    struct CNF_clause* ret = f->next;
+    //free(f);
 
-    while (true) {
-        if (f0 == NULL)
-            return;
-        
+    return ret;
+}
+
+
+//------Print
+void print_Clause(Clause c) {
+    while (c != NULL) {
+        printf("%d", c->l);
+
+        if (c->next != NULL)
+            printf(" || ");
+
+        c = c->next;
+    }
+    printf("\n");
+}
+
+void print_CNF_clause_lst(struct CNF_clause* f0) {
+    /*Print the formula.*/
+
+    while (f0 != NULL) {
         Clause c = f0->c;
         printf("(");
-        while (true) {
-            if (c == NULL)
-                break;
-            
+        while (c != NULL) {
             if (c->l < 0)
                 printf("¬x_%d", c->l);
             else
@@ -124,38 +140,127 @@ void print_CNF(CNF* f) {
     }
 }
 
+void print_CNF(CNF* f) {
+    /*Output to stdout the formula.*/
 
-void print_Clause(Clause c) {
-    while (true) {
-        if (c == NULL)
-            break;
-        else
-            printf(" || ");
-        
-        printf("%d", c->l);
+    printf("Clause count : %d\nVariable count : %d\n\n", f->cc, f->varc);
+    
+    struct CNF_clause* f0 = f->f;
 
-        c = c->next;
-    }
-    printf("\n");
+    print_CNF_clause_lst(f0);
 }
 
 
-void free_CNF(CNF* f) {
-    /*Free a CNF* var.*/
+//------Free
+//---Free clause
+void free_clause(Clause c) {
+    /*Free a Clause list.*/
 
-    struct CNF_clause* f0 = f->f;
-    Clause c = f0->c;
     Clause c1;
-    while (true) {
-        if (c == NULL)
-            break;
 
+    while (c != NULL) {
         c1 = c->next;
         free(c);
         c = c1;
     }
+}
 
-    free(f0);
+//---Free CNF
+void free_CNF(CNF* formula) {
+    /*Free a CNF* struct.*/
 
+    struct CNF_clause* f = formula->f;
+    struct CNF_clause* f1;
+
+    while (f != NULL) {
+        f1 = f->next;
+        free_clause(f->c);
+        free(f);
+        f = f1;
+    }
+    
     free(f);
+}
+
+//------Copy
+//---Copy clause
+Clause copy_clause_0(Clause c) {
+    /*Return a copy of c, but swap order.*/
+
+    Clause cp = NULL;
+
+    while (c != NULL) {
+        Clause lit = (Clause) malloc(sizeof(struct literal));
+        lit->l = c->l;
+        lit->next = cp;
+        cp = lit;
+
+        c = c->next;
+    }
+
+    return cp;
+}
+
+Clause copy_clause(Clause c) {
+    /*Return a copy of `c`.*/
+
+    Clause c0 = copy_clause_0(c);
+    Clause c1 = copy_clause_0(c0);
+
+    free_clause(c0);
+
+    return c1;
+}
+
+//---Copy CNF
+CNF* copy_CNF_0(CNF* formula) {
+    /*Return a copy of `formula`, but swap order.*/
+
+    //CNF* f = NULL;
+    struct CNF_clause* f = formula->f;
+    struct CNF_clause* f0 = NULL;
+
+    while (f != NULL) {
+        struct CNF_clause* cl = (struct CNF_clause*) malloc(sizeof(struct CNF_clause));
+        cl->c = copy_clause(f->c);
+        cl->next = f0;
+        f0 = cl;
+
+        f = f->next;
+    }
+
+    CNF* ret = (CNF*) malloc(sizeof(CNF));
+    ret->cc = formula->cc;
+    ret->varc = formula->varc;
+    ret->f = f0;
+
+    return ret;
+}
+
+CNF* copy_CNF(CNF* formula) {
+    /*Return a copy of `formula`.*/
+
+    CNF* f0 = copy_CNF_0(formula);
+    CNF* f1 = copy_CNF_0(f0);
+
+    free_CNF(f0);
+
+    return f1;
+}
+
+//------Eval
+CNF* eval(CNF* formula, int x, bool v) {
+    /*
+    Evaluate the formula at x with value v.
+    
+    Input :
+        - formula : the CNF* formula ;
+        - x       : the variable ;
+        - v       : the value that should take the variable.
+    
+    Output :
+        the formula, where all clause where there is `x` are removed, and where -`x` is removed from all clauses.
+    */
+
+    return formula;
 }
