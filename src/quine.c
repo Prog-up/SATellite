@@ -39,7 +39,7 @@ bool quine(CNF* formula, bool** val){
         if(quine(eval(formula, x, true), val)){
             return true;
         }
-        val[i]=0;
+        val[x]=0;
         //CNF* formula3 = eval(formula, x, false);
         return quine(eval(formula, x, false), val);
     }
