@@ -42,6 +42,5 @@ bool quine(CNF* formula, bool** val){
         val[i]=0;
         //CNF* formula3 = eval(formula, x, false);
         return quine(eval(formula, x, false), val);
-
     }
 }
