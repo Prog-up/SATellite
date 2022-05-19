@@ -53,14 +53,27 @@ Optional arguments :
 ...
 
 ### Output description
-Todo
+If the input formula is unsatisfiable, the program outputs
+```
+UNSATISFIABLE
+```
+
+Otherwise, the program outputs `SATSIFIABLE`, with more lines to show a model of the formula, *e.g* :
+
+```
+SATISFIABLE
+x_1 = 1
+x_2 = 0
+x_3 = 1
+...
+```
 
 ## Implementation choices
 ### Data structure
 
 We represent the literals as integer (positive for a variable, negative for its negation).
 
-To represent formulae under cnf, we use two nested lists, surrounded by a struct :
+To represent formulae under cnf, we use two nested double chained lists, surrounded by a struct :
 - `Clause` : a litteral list ;
 - `CNF` : a struct containing a `Clause` list, the clause count, and the variable count.
 

@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 #include "../include/parse_dimacs.h"
 #include "../include/types.h"
@@ -147,6 +148,11 @@ int parse(int argc, char** argv) {
         return 0;
     }
 
+    //---------Tests---------
+    CNF* f1 = eval(f, 1, true);
+    print_CNF(f1);
+    free_CNF(f1);
+    //-----------------------
 
     free_CNF(f);
 
