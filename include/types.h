@@ -9,6 +9,7 @@
 struct literal {
     int l;
     struct literal* next;
+    struct literal* prev;
 };
 typedef struct literal* Clause;
 
@@ -16,6 +17,7 @@ typedef struct literal* Clause;
 struct CNF_clause {
     Clause c;
     struct CNF_clause* next;
+    struct CNF_clause* prev;
 };
 
 typedef struct {
@@ -31,7 +33,7 @@ struct CNF_clause* Clause_arr_to_CNF_clause(Clause* arr, int n);
 
 //---Deleting functions
 Clause del_literal(Clause c, int x);
-struct CNF_clause* del_clause(struct CNF_clause* f);
+void del_clause(struct CNF_clause** f);
 
 //---Print
 void print_Clause(Clause c);
