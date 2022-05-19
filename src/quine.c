@@ -1,32 +1,46 @@
+//------------------------------
+// Quine Algo
+//------------------------------
+
+//---Includes
 #include <stdbool.h>
 #include <stdlib.h>
 #include "../include/types.h"
 
-bool quine(CNF c, int n){
-    if ((c->varc)=0){
-        return true;
-    }else{
-        CNF c0 = c;
-        for (int i=0, i<=(c->varc),i++){ // count varc
-            for (int j=0, j<=c->cc, j++){ // count cc
-                if (c->next) = NULL{
-                    c = c0;
-                }else{
-                    c = c->next;
-                }
-                clause lit1 = c->clause_list;
-                if (lit1->literals) < 0{
-                    del(lit1, lit1->literals);
-                    lit1->n = (lit1->n)-1;
-                }else{ // suppr clause
-                    for (int lit2=0, lit2 <= varc, lit2++){
-                        del(c, lit2);
-                        lit1->n = 0;
-                    }
-                }
-            }
-        c->varc--;           
+//---Check if there is an empty clause in CNF
+bool contain_empty(CNF* formula){
+    struct CNF_clause* c = formula->f;
+    for(int i=0;i<formula->cc;i++){
+        if(c->c=NULL){
+            return true;
         }
-    return (c->varc = 0);
+        c = c->next;
+    }
+    return false;
+}
+
+//---Quine Algo
+bool quine(CNF* formula, bool** val){
+    if(formula->f = NULL){
+        return true;
+    }else if (contain_empty(formula->f))
+    {
+        return false;
+    }else{
+        int x;
+        for (int i=0; i<formula->varc;i++){
+            if(val[i]=-1){
+                x=i+1;
+                break;
+            }
+        }
+        val[x]=1;
+        //CNF* formula2 = eval(formula, x, true):
+        if(quine(eval(formula, x, true), val)){
+            return true;
+        }
+        val[x]=0;
+        //CNF* formula3 = eval(formula, x, false);
+        return quine(eval(formula, x, false), val);
     }
 }
