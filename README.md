@@ -35,6 +35,7 @@ Positional arguments :
 Optional arguments :
     -h, --help                   Show this help message and exit
     -v, --version                Show version and exit
+    -t, --test                   Launch tests
     -d, --display                Print the formula to the screen and exit
     -a ALGO, --algorithm ALGO    Select solver algorithm. Default is 'quine'
         'quine'

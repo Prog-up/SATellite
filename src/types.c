@@ -91,7 +91,10 @@ Clause del_literal_rec(Clause c, Clause prev, int x) {
     if (c->l == x) {
         Clause t = c;
         c = t->next;
-        c->prev = prev;
+
+        if (c != NULL)
+            c->prev = prev;
+
         free(t);
         return del_literal_rec(c, prev, x);
     }
@@ -317,6 +320,10 @@ CNF* eval(CNF* formula, int x, bool v) {
     Output :
         the formula, where all clause where there is `x` are removed, and where -`x` is removed from all clauses.
     */
+
+    if (v == false) {
+        return eval(formula, -x, true);
+    }
 
     CNF* f_cpy = copy_CNF(formula);
 

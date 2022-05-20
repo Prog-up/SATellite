@@ -10,8 +10,9 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#include "../include/parse_dimacs.h"
 #include "../include/types.h"
+#include "../include/parse_dimacs.h"
+#include "../include/quine.h"
 
 //---Ini
 char version[] = "v1.0";
@@ -44,6 +45,7 @@ void print_help(char* argv0) {
     printf("\nOptional arguments :\n");
     printf("    -h, --help                   Show this help message and exit\n");
     printf("    -v, --version                Show version and exit\n");
+    printf("    -t, --test                   Launch tests\n");
     printf("    -d, --display                Print the formula to the screen and exit\n");
     printf("    -a ALGO, --algorithm ALGO    Select the algorithm used. Default is 'quine'\n");
     printf("        'quine'\n");
@@ -57,6 +59,7 @@ void print_help(char* argv0) {
 int parse(int argc, char** argv) {
     /*Parse command line arguments and execute associated functions.*/
 
+    //---Init
     char algo[6] = "quine";
     char heur[16];
     char fn[255];
@@ -64,8 +67,10 @@ int parse(int argc, char** argv) {
     bool file_is_def = false;
     bool algo_is_def = false;
     bool heur_is_def = false;
+    bool test_is_def = false;
     bool display_is_def = false;
 
+    //---Parsing
     if (argc == 1) { //No arguments
         print_logo();
         print_usage(argv[0]);
@@ -81,6 +86,9 @@ int parse(int argc, char** argv) {
         else if (strcmp(argv[k], "-v") == 0 || strcmp(argv[k], "--version") == 0) { //Version
             printf("SATellite version : %s\n", version);
             return 0;
+        }
+        else if (strcmp(argv[k], "-t") == 0 || strcmp(argv[k], "--test") == 0) { //Tests
+            test_is_def = true;
         }
         else if (strcmp(argv[k], "-d") == 0 || strcmp(argv[k], "--display") == 0) { //Print formula
             display_is_def = true;
@@ -136,11 +144,23 @@ int parse(int argc, char** argv) {
         }
     }
     
-    //TODO: use function according to defined arguments
-
+    //---Use arguments
     CNF* f = parse_cnf(fn);
     if (f == NULL)
         return 1;
+    
+    if (test_is_def) {
+        printf("Testing ...\n");
+        printf("TODO\n");
+        
+        //---------Tests---------
+        CNF* f1 = eval(f, 1, true);
+        print_CNF(f1);
+        free_CNF(f1);
+        //-----------------------
+
+        return 0;
+    }
 
     if (display_is_def) {
         print_CNF(f);
@@ -148,11 +168,12 @@ int parse(int argc, char** argv) {
         return 0;
     }
 
-    //---------Tests---------
-    CNF* f1 = eval(f, 1, true);
-    print_CNF(f1);
-    free_CNF(f1);
-    //-----------------------
+    if (strcmp(algo, "quine") == 0) {
+        use_quine(f);
+    }
+    else if (strcmp(algo, "dpll") == 0) {
+        printf("Not implemented yet...\n");
+    }
 
     free_CNF(f);
 
