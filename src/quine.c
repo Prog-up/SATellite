@@ -11,20 +11,20 @@
 
 //---Check if there is an empty clause in a CNF
 bool contain_empty(CNF* formula) {
-    struct CNF_clause* c = formula->f;
+    struct CNF_clause* f = formula->f;
 
-    while (c != NULL) {
-        if (c->c == NULL) {
+    while (f != NULL) {
+        if (f->c == NULL) {
             return true;
         }
 
-        c = c->next;
+        f = f->next;
     }
 
     return false;
 }
 
-//---Quine Algo
+//---Quine Algorithm
 bool quine(CNF* formula, int** val, int n) {
     /*
     Quine algorithm.
@@ -36,7 +36,7 @@ bool quine(CNF* formula, int** val, int n) {
 
     printf("In quine : 0\n");
     print_CNF(formula);
-    printf("-\n");
+    printf("--\n");
 
     if (formula->f == NULL) {
         return true;
@@ -47,25 +47,28 @@ bool quine(CNF* formula, int** val, int n) {
     else {
         int x = n - formula->varc + 1;
 
+        printf("Chosen var : %d\n", x);
+
         CNF* formula2 = eval(formula, x, true);
+        printf("there\n");
         if (quine(formula2, val, n)) {
             (*val)[x - 1] = 1;
             return true;
         }
 
         free_CNF(formula2);
-
-        printf("In quine : before f3, var : %d\n", x);
-        printf("---\n");
         print_CNF(formula);
-        printf("---\n");
+
         CNF* formula3 = eval(formula, x, false);
-        print_CNF(formula3);
-        printf("---\n");
         if (quine(formula3, val, n)) {
+            
             free_CNF(formula3);
             (*val)[x - 1] = 0;
             return true;
+        }
+        else {
+            free_CNF(formula3);
+            return false;
         }
     }
 }
