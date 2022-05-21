@@ -6,6 +6,6 @@
 
 //------Functions
 bool quine(CNF* formula, int** val, int n);
-void use_quine(CNF* formula);
+void use_quine(CNF* formula, bool verbose);
 
 #endif

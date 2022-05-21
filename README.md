@@ -34,9 +34,10 @@ Positional arguments :
 
 Optional arguments :
     -h, --help                   Show this help message and exit
-    -v, --version                Show version and exit
+    -V, --version                Show version and exit
     -t, --test                   Launch tests
     -d, --display                Print the formula to the screen and exit
+    -v, --verbose                Be more verbose
     -a ALGO, --algorithm ALGO    Select solver algorithm. Default is 'quine'
         'quine'
         'dpll'
@@ -59,7 +60,15 @@ If the input formula is unsatisfiable, the program outputs
 UNSATISFIABLE
 ```
 
-Otherwise, the program outputs `SATSIFIABLE`, with more lines to show a model of the formula, *e.g* :
+Otherwise, the program outputs `SATSIFIABLE`, with a model below for each variable, *e.g* :
+
+```
+SATISFIABLE
+1 0 1 1 0 ...
+```
+(x_1 = true, x_2 = false, x_3 = true, ...)
+
+If the flag `-v` / `--verbose` is used, it use a line to show each variable value, and print the elapsed time, *e.g* :
 
 ```
 SATISFIABLE
@@ -67,6 +76,8 @@ x_1 = 1
 x_2 = 0
 x_3 = 1
 ...
+
+time elapsed : 0.03s
 ```
 
 ## Implementation choices

@@ -6,8 +6,10 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 
 #include "../include/quine.h"
+#include "../include/general.h"
 
 //---Check if there is an empty clause in a CNF
 bool contain_empty(CNF* formula) {
@@ -34,10 +36,6 @@ bool quine(CNF* formula, int** val, int n) {
     - n       : the size of the array `val`. 
     */
 
-    printf("In quine : 0\n");
-    print_CNF(formula);
-    printf("--\n");
-
     if (formula->f == NULL) {
         return true;
     }
@@ -47,33 +45,29 @@ bool quine(CNF* formula, int** val, int n) {
     else {
         int x = n - formula->varc + 1;
 
-        printf("Chosen var : %d\n", x);
-
         CNF* formula2 = eval(formula, x, true);
-        printf("there\n");
         if (quine(formula2, val, n)) {
             (*val)[x - 1] = 1;
             return true;
         }
 
-        free_CNF(formula2);
-        print_CNF(formula);
+        //free_CNF(formula2);
 
         CNF* formula3 = eval(formula, x, false);
         if (quine(formula3, val, n)) {
             
-            free_CNF(formula3);
+            //free_CNF(formula3);
             (*val)[x - 1] = 0;
             return true;
         }
         else {
-            free_CNF(formula3);
+            //free_CNF(formula3);
             return false;
         }
     }
 }
 
-void use_quine(CNF* formula) {
+void use_quine(CNF* formula, bool verbose) {
     /*Use quine with formula and print output.*/
 
     int n = formula->varc;
@@ -82,16 +76,35 @@ void use_quine(CNF* formula) {
         val[k] = -1;
     }
 
+    clock_t t = clock();
     bool sat = quine(formula, &val, n);
+    t = clock() - t;
+    double time_taken = ((double) t) / CLOCKS_PER_SEC;
 
     if (sat) {
         printf("SATISFIABLE\n");
-        for (int k = 0 ; k < n ; k++) {
-            printf("x_%d = %d\n", k + 1, val[k]);
+
+        if (verbose) {
+            for (int k = 0 ; k < n ; k++) {
+                printf("x_%d = %d\n", k + 1, val[k]);
+            }
+
+            printf("\nElapsed time : %lf sec\n", time_taken);
+        }
+        else {
+            for (int k = 0 ; k < n ; k++) {
+                printf("%d ", val[k]);
+            }
+            printf("\n");
         }
     }
-    else
+    else {
         printf("UNSATISFIABLE\n");
+
+        if (verbose) {
+            printf("\nElapsed time : %lf sec\n", time_taken);
+        }
+    }
 
     free(val);
 }
