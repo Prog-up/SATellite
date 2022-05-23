@@ -29,11 +29,18 @@ CNF* parse_cnf(char* fn) {
     //------First, search for description line, of the form 'p cnf V C'
     //---Go to 'p'
     char c;
-    c = getc(file);
-    while (c != 'p') { // Skip all comments and search 'p'
-        c = getc(file); //getc reads one char
-
-        if (c == EOF) {
+    while (true) { // Skip all comments and search 'p'
+        c = getc(file);
+        if (c == 'c') { //Eat the line (because it is a comment)
+            char garbage = '0';
+            while (garbage != '\n') {
+                garbage = getc(file);
+            }
+        }
+        else if (c == 'p')
+            break;
+        
+        else if (c == EOF) {
             printf("SATellite: parse_dimacs: File '%s' is not representing a formula under cnf (there is no 'p').\n", fn);
             return NULL;
         }
@@ -43,6 +50,7 @@ CNF* parse_cnf(char* fn) {
     char buff[255];
     fscanf(file, "%s", buff);
     if (strcmp("cnf", buff) != 0) {
+        printf("'%s'\n", buff);
         printf("SATellite: parse_dimacs: File '%s' is not representing a formula under cnf.\n", fn);
         return NULL;
     }

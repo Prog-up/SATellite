@@ -82,29 +82,81 @@ struct CNF_clause* Clause_arr_to_CNF_clause(Clause* arr, int n) {
 
 
 //------Deleting functions
-Clause del_literal_rec(Clause c, Clause prev, int x) {
-    /*Remove all occurences of `x` in the clause c. Call it with prev = NULL.*/
+/* Clause del_literal_rec(Clause c, int x) {
+    / *Remove all occurences of `x` in the clause c.* /
+
+    printf("del0\n");
 
     if (c == NULL)
-        return c;
+        return NULL;
+    
+    printf("del1\n");
     
     if (c->l == x) {
+        printf("del: c->l == x\n");
         Clause t = c;
+
+        if (c->next == NULL && c->prev != NULL) {
+            c->prev->next = NULL;
+        }
+
         c = t->next;
-        c->prev = prev;
+
+        if (c != NULL) {
+            c->prev = t->prev;
+
+            if (c->prev != NULL)
+                c->prev->next = c;
+        }
+
         free(t);
-        return del_literal_rec(c, prev, x);
+        return del_literal(c, x);
     }
 
-    c->next = del_literal_rec(c->next, c, x);
+    c->next = del_literal(c->next, x);
 
     return c;
-}
+} */
 
 Clause del_literal(Clause c, int x) {
     /*Remove all occurences of `x` in the clause c.*/
 
-    return del_literal_rec(c, NULL, x);
+    Clause c0 = c;
+    
+    while (c != NULL) {
+        if (c->l == x) {
+            Clause t = c;
+
+            if (c == c0)
+                c0 = c0->next;
+
+            if (c->next == NULL && c->prev != NULL) {
+                c->prev->next = NULL;
+            }
+
+            c = t->next;
+
+            if (c != NULL) {
+                c->prev = t->prev;
+
+                if (c->prev != NULL)
+                    c->prev->next = c;
+            }
+
+            //free(t);
+        }
+        else
+            c = c->next;
+
+        if (c != NULL && c == c->next) { //Lazy evaluation
+            //printf("c == c->next ...\n");
+            c->next = NULL;
+            c->prev = NULL;
+            break;
+        }
+    }
+
+    return c0;
 }
 
 
@@ -121,7 +173,7 @@ void del_clause(struct CNF_clause** f) {
 
     struct CNF_clause* t = *f;
 
-    if ((*f)->next == NULL) {
+    if ((*f)->next == NULL && (*f)->prev != NULL) {
         (*f)->prev->next = NULL;
     }
 
@@ -134,8 +186,8 @@ void del_clause(struct CNF_clause** f) {
             (*f)->prev->next = *f;
     }
 
-    free_clause(t->c);
-    free(t);
+    //free_clause(t->c);
+    //free(t);
 }
 
 
@@ -235,9 +287,10 @@ Clause copy_clause_0(Clause c) {
     /*Return a copy of c, but in opposite order.*/
 
     Clause cp = NULL;
+    Clause lit = NULL;
 
     while (c != NULL) {
-        Clause lit = (Clause) malloc(sizeof(struct literal));
+        lit = (Clause) malloc(sizeof(struct literal));
         lit->l = c->l;
         lit->next = cp;
 
@@ -256,12 +309,13 @@ Clause copy_clause_0(Clause c) {
 Clause copy_clause(Clause c) {
     /*Return a copy of `c`.*/
 
-    Clause c0 = copy_clause_0(c);
+    /* Clause c0 = copy_clause_0(c);
     Clause c1 = copy_clause_0(c0);
 
     free_clause(c0);
 
-    return c1;
+    return c1; */
+    return copy_clause_0(c);
 }
 
 //---Copy CNF
@@ -296,70 +350,11 @@ CNF* copy_CNF_0(CNF* formula) {
 CNF* copy_CNF(CNF* formula) {
     /*Return a copy of `formula`.*/
 
-    CNF* f0 = copy_CNF_0(formula);
+    /* CNF* f0 = copy_CNF_0(formula);
     CNF* f1 = copy_CNF_0(f0);
 
     free_CNF(f0);
 
-    return f1;
-}
-
-//------Eval
-CNF* eval(CNF* formula, int x, bool v) {
-    /*
-    Evaluate the formula at x with value v.
-    
-    Input :
-        - formula : the CNF* formula ;
-        - x       : the variable ;
-        - v       : the value that should take the variable.
-    
-    Output :
-        the formula, where all clause where there is `x` are removed, and where -`x` is removed from all clauses.
-    */
-
-    CNF* f_cpy = copy_CNF(formula);
-
-    struct CNF_clause* f = f_cpy->f;
-    struct CNF_clause* f0 = f;
-
-    int cc = f_cpy->cc;
-    int varc = f_cpy->varc;
-
-    while (f != NULL) {
-        Clause c = f->c;
-        Clause c0 = c;
-
-        bool go_next = true;
-        while (c != NULL) {
-            if (c->l == x) {
-                if (f == f0) {
-                    f0 = f0->next;
-                }
-                
-                del_clause(&f);
-                cc--;
-                go_next = false;
-                break;
-            }
-
-            if (c->l == -x) {
-                c0 = del_literal(c0, -x);
-                f->c = c0;
-                break;
-            }
-
-            c = c->next;
-        }
-
-        if (go_next)
-            f = f->next;
-    }
-
-    f_cpy->f = f0;
-    f_cpy->varc = varc - 1;
-    f_cpy->cc = cc;
-
-    return f_cpy;
-
+    return f1; */
+    return copy_CNF_0(formula);
 }
