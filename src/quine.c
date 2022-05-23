@@ -1,5 +1,5 @@
 //------------------------------
-// Quine Algorithm
+// Quine Algorithm implementation
 //------------------------------
 
 //---Includes
@@ -49,18 +49,17 @@ bool quine(CNF* formula, int** val, int n) {
         formula2 = eval(formula2, x, true);
         if (quine(formula2, val, n)) {
             (*val)[x - 1] = 1;
-            //free_CNF(formula2);
+            free_CNF(formula2);
             return true;
         }
         else {
             //free_CNF(formula2);
-            //TODO: Why this free, and the one in the next block, raise a segfault ?
 
             CNF* formula3 = copy_CNF(formula);
             formula3 = eval(formula3, x, false);
             if (quine(formula3, val, n)) {
                 
-                //free_CNF(formula3);
+                free_CNF(formula3);
                 (*val)[x - 1] = 0;
                 return true;
             }
