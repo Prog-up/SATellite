@@ -45,24 +45,29 @@ bool quine(CNF* formula, int** val, int n) {
     else {
         int x = n - formula->varc + 1;
 
-        CNF* formula2 = eval(formula, x, true);
+        CNF* formula2 = copy_CNF(formula);
+        formula2 = eval(formula2, x, true);
         if (quine(formula2, val, n)) {
             (*val)[x - 1] = 1;
-            return true;
-        }
-
-        //free_CNF(formula2);
-
-        CNF* formula3 = eval(formula, x, false);
-        if (quine(formula3, val, n)) {
-            
-            //free_CNF(formula3);
-            (*val)[x - 1] = 0;
+            //free_CNF(formula2);
             return true;
         }
         else {
-            //free_CNF(formula3);
-            return false;
+            //free_CNF(formula2);
+            //TODO: Why this free, and the one in the next block, raise a segfault ?
+
+            CNF* formula3 = copy_CNF(formula);
+            formula3 = eval(formula3, x, false);
+            if (quine(formula3, val, n)) {
+                
+                //free_CNF(formula3);
+                (*val)[x - 1] = 0;
+                return true;
+            }
+            else {
+                //free_CNF(formula3);
+                return false;
+            }
         }
     }
 }
@@ -86,14 +91,20 @@ void use_quine(CNF* formula, bool verbose) {
 
         if (verbose) {
             for (int k = 0 ; k < n ; k++) {
-                printf("x_%d = %d\n", k + 1, val[k]);
+                if (val[k] == 0)
+                    printf("v -%d\n", k + 1);
+                else
+                    printf("v %d\n", k + 1);
             }
 
             printf("\nElapsed time : %lf sec\n", time_taken);
         }
         else {
             for (int k = 0 ; k < n ; k++) {
-                printf("%d ", val[k]);
+                if (val[k] == 0)
+                    printf("-%d ", k + 1);
+                else
+                    printf("%d ", k + 1);
             }
             printf("\n");
         }

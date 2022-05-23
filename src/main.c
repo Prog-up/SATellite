@@ -13,6 +13,7 @@
 #include "../include/types.h"
 #include "../include/parse_dimacs.h"
 #include "../include/quine.h"
+#include "../include/general.h"
 
 //---Ini
 char version[] = "v1.0";
@@ -160,9 +161,16 @@ int parse(int argc, char** argv) {
         
         //---------Tests---------
         CNF* f2 = copy_CNF(f);
-        free_CNF(f);
+        f2 = eval(f2, 12, true);
         print_CNF(f2);
         free_CNF(f2);
+
+        CNF* f3 = copy_CNF(f);
+        f3 = eval(f3, 12, false);
+        print_CNF(f3);
+        free_CNF(f3);
+
+        free_CNF(f);
         //-----------------------
 
         return 0;

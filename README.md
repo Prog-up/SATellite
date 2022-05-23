@@ -64,7 +64,7 @@ Otherwise, the program outputs `SATSIFIABLE`, with a model below for each variab
 
 ```
 SATISFIABLE
-1 0 1 1 0 ...
+1 -2 3 4 -5 ...
 ```
 (x_1 = true, x_2 = false, x_3 = true, ...)
 
@@ -72,9 +72,9 @@ If the flag `-v` / `--verbose` is used, it use a line to show each variable valu
 
 ```
 SATISFIABLE
-x_1 = 1
-x_2 = 0
-x_3 = 1
+v 1
+v -2
+v 3
 ...
 
 time elapsed : 0.03s

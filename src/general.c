@@ -29,7 +29,8 @@ CNF* eval(CNF* formula, int x, bool v) {
         return eval(formula, -x, true);
     }
 
-    CNF* f_cpy = copy_CNF(formula);
+    //CNF* f_cpy = copy_CNF(formula);
+    CNF* f_cpy = formula;
 
     struct CNF_clause* f = f_cpy->f;
     struct CNF_clause* f0 = f;

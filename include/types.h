@@ -49,7 +49,4 @@ void free_CNF(CNF* f);
 Clause copy_clause(Clause c);
 CNF* copy_CNF(CNF* formula);
 
-//---Eval
-CNF* eval(CNF* formula, int x, bool v);
-
 #endif
