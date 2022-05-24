@@ -5,6 +5,6 @@
 #include "types.h"
 
 //------Functions
-CNF* eval(CNF* formula, int x, bool v);
+void eval(CNF* formula, int x, bool v);
 
 #endif
