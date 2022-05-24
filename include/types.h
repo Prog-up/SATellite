@@ -49,4 +49,7 @@ void free_CNF(CNF* f);
 Clause copy_clause(Clause c);
 CNF* copy_CNF(CNF* formula);
 
+//---Clause size
+int clause_size(Clause c);
+
 #endif

@@ -5,6 +5,6 @@
 #include "types.h"
 
 //------Functions
-
+CNF* unit_propagate(CNF* formula, int** val);
 
 #endif

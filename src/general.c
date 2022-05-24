@@ -12,9 +12,9 @@
 
 
 //------Eval
-CNF* eval(CNF* formula, int x, bool v) {
+void eval(CNF* formula, int x, bool v) {
     /*
-    Evaluate the formula at x with value v.
+    Evaluate the formula at x with value v. It modifies the input formula.
     
     Input :
         - formula : the CNF* formula ;
@@ -29,14 +29,11 @@ CNF* eval(CNF* formula, int x, bool v) {
         return eval(formula, -x, true);
     }
 
-    //CNF* f_cpy = copy_CNF(formula);
-    CNF* f_cpy = formula;
-
-    struct CNF_clause* f = f_cpy->f;
+    struct CNF_clause* f = formula->f;
     struct CNF_clause* f0 = f;
 
-    int cc = f_cpy->cc;
-    int varc = f_cpy->varc;
+    int cc = formula->cc;
+    int varc = formula->varc;
 
     while (f != NULL) {
         Clause c = f->c;
@@ -57,7 +54,6 @@ CNF* eval(CNF* formula, int x, bool v) {
 
             if (c->l == -x) {
                 c0 = del_literal(c0, -x);
-                c = del_literal(c, -x);
                 f->c = c0;
                 break;
             }
@@ -70,10 +66,8 @@ CNF* eval(CNF* formula, int x, bool v) {
         }
     }
 
-    f_cpy->f = f0;
-    f_cpy->varc = varc - 1;
-    f_cpy->cc = cc;
-
-    return f_cpy;
+    formula->f = f0;
+    formula->varc = varc - 1;
+    formula->cc = cc;
 
 }

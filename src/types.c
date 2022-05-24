@@ -143,13 +143,14 @@ Clause del_literal(Clause c, int x) {
                     c->prev->next = c;
             }
 
-            //free(t);
+            free(t);
         }
         else
             c = c->next;
 
+        //TODO: solve this bug
         if (c != NULL && c == c->next) { //Lazy evaluation
-            //printf("c == c->next ...\n");
+            printf("c == c->next ...\n");
             c->next = NULL;
             c->prev = NULL;
             break;
@@ -357,4 +358,18 @@ CNF* copy_CNF(CNF* formula) {
 
     return f1; */
     return copy_CNF_0(formula);
+}
+
+
+//------Clause size
+int clause_size(Clause c) {
+    /*Return the nuber of elements in the Clause `c`. */
+
+    int n = 0;
+    while (c != NULL) {
+        n++;
+        c = c->next;
+    }
+
+    return n;
 }

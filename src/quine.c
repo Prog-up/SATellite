@@ -46,7 +46,7 @@ bool quine(CNF* formula, int** val, int n) {
         int x = n - formula->varc + 1;
 
         CNF* formula2 = copy_CNF(formula);
-        formula2 = eval(formula2, x, true);
+        eval(formula2, x, true);
         if (quine(formula2, val, n)) {
             (*val)[x - 1] = 1;
             free_CNF(formula2);
@@ -56,7 +56,7 @@ bool quine(CNF* formula, int** val, int n) {
             //free_CNF(formula2);
 
             CNF* formula3 = copy_CNF(formula);
-            formula3 = eval(formula3, x, false);
+            eval(formula3, x, false);
             if (quine(formula3, val, n)) {
                 
                 free_CNF(formula3);
