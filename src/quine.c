@@ -29,7 +29,7 @@ bool quine(CNF* formula, int** val, int n) {
     }
     else {
         //int x = n - formula->varc + 1;
-        int x = formula->f->c->l;
+        int x = abs(formula->f->c->l);
 
         CNF* formula2 = copy_CNF(formula);
         eval(formula2, x, true);

@@ -68,33 +68,43 @@ bool dpll(CNF* formula, char* heur, int** val, int n) {
     - n       : the size of the array `val`. 
     */
 
+    //print_CNF(formula);
+    //printf("Unit prop :\n");
+
     unit_propagate(formula, val);
+
+    //print_CNF(formula);
+    //printf("---\n");
 
 
     if (formula->f == NULL) {
         return true;
     }
     else if (contain_empty(formula)) {
+        //printf("contain empty\n");
         return false;
     }
     else {
         int x = next_lit(formula, *val, n, heur);
+        //printf("x : %d\n", x);
 
         CNF* formula2 = copy_CNF(formula);
         eval(formula2, x, true);
         if (dpll(formula2, heur, val, n)) {
-            (*val)[abs(x)] = true;
+            (*val)[abs(x) - 1] = true;
             free_CNF(formula2);
             return true;
         }
         else {
             //free_CNF(formula2);
+            //printf("else (x = %d) :\n", x);
+            //print_CNF(formula);
 
             CNF* formula3 = copy_CNF(formula);
             eval(formula3, x, false);
 
             if (dpll(formula3, heur, val, n)) {
-                (*val)[abs(x)] = false;
+                (*val)[abs(x) - 1] = false;
                 free_CNF(formula3);
                 return true;
             }

@@ -143,7 +143,7 @@ Clause del_literal(Clause c, int x) {
                     c->prev->next = c;
             }
 
-            free(t);
+            //free(t);
         }
         else
             c = c->next;

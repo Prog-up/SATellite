@@ -37,14 +37,17 @@ int max_arr(int* arr, int n) {
 //------Heuristics
 //---First (label order : 1, 2, 3, ...)
 int first_h(CNF* formula) { // return the first literal
-    if (n > 0) {
+    /* if (n > 0) {
         n = -n;
     }
     else {
         n = 1 - n;
     }
-    return n;
-} //TODO: or simply return formula->f->c->l (if it exists) ?
+    return n; */
+
+    return abs(formula->f->c->l);
+}
+//TODO: or simply return formula->f->c->l (if it exists) ?
 
 
 //---Frequency
