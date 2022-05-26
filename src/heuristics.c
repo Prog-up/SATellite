@@ -6,24 +6,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "../include/types.h"
+
+//#include "../include/types.h"
 #include "../include/parse_dimacs.h"
+#include "../include/heuristics.h"
 
 //---Init
 int n=1;
 
-//---Heuristic by list
-int heuristic_first(CNF* formula){ // return the first literal
-    if(n>0){
-        n=-n;
-    }else{
-        n=(-n)+1;
+//---First (label order : 1, 2, 3, ...)
+int first_h(CNF* formula) { // return the first literal
+    if (n > 0) {
+        n = -n;
+    }
+    else {
+        n = 1 - n;
     }
     return n;
-}
+} //TODO: or simply return formula->f->c->l (if it exists) ?
 
-//---Heuristic by frequency
-int heuristic_freq(CNF* formula){ //tabular of the most used literals
+
+//---Frequency
+int freq_h(CNF* formula) { //tabular of the most used literals
     int* tab = (int*) malloc ((formula->varc*2) *sizeof (int));
     for(int i=0 ; i<formula->varc*2 ; i++){
         tab[i] = 0;
@@ -56,8 +60,8 @@ int heuristic_freq(CNF* formula){ //tabular of the most used literals
     return res;
 }
 
-//---Heuristic by random
-int heuristic_random(CNF* formula, int* val){ // return a random literal
+//---Random
+int random_h(CNF* formula, int* val){ // return a random literal
     while(true){
         int rd=(rand() % formula->varc+1);
         if(val[rd]==-1){
@@ -66,8 +70,10 @@ int heuristic_random(CNF* formula, int* val){ // return a random literal
     }
 }
 
-//---Heuristic by jeroslow-wang with difference betwen a literal and it's negation
-int heuristic_jeroslow_wang_one_sided(CNF* formula){
+//---Jeroslow-Wang with difference betwen a literal and it's negation
+int JeroslowWang1_h(CNF* formula) {
+    /*Jeroslow-Wang one-sided heuristic*/
+
     Clause l;
     Clause l2;
     int count;
@@ -110,8 +116,12 @@ int heuristic_jeroslow_wang_one_sided(CNF* formula){
     return res;
 }
 
-//---Heuristic by jeroslow-wang without difference betwen a literal and it's negation
-int heuristic_jeroslow_wang_two_sided(CNF* formula){
+//TODO: a function `max`, and use the function `clause_size` from types.h
+
+//---Jeroslow-Wang without difference betwen a literal and it's negation
+int JeroslowWang2_h(CNF* formula) {
+    /*Jeroslow-Wang two-sided heuristic*/
+
     Clause l;
     Clause l2;
     int count;
@@ -146,12 +156,12 @@ int heuristic_jeroslow_wang_two_sided(CNF* formula){
     return res;
 }
 
-//---Tmp, debug
-int main(void){
+/* //---Tmp, debug
+int main_(void){
     for(int i=0;i<100;i++){
         print_CNF(parse_cnf("../test/SAT.cnf"));
         printf("\n");
-        printf("%d", heuristic_first(parse_cnf("../test/SAT.cnf")));
+        printf("%d", first_h(parse_cnf("../test/SAT.cnf")));
     }
     return 0;
-}
+} */
