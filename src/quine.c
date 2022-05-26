@@ -10,20 +10,6 @@
 #include "../include/quine.h"
 #include "../include/general.h"
 
-//---Check if there is an empty clause in a CNF
-bool contain_empty(CNF* formula) {
-    struct CNF_clause* f = formula->f;
-
-    while (f != NULL) {
-        if (f->c == NULL) {
-            return true;
-        }
-
-        f = f->next;
-    }
-
-    return false;
-}
 
 //---Quine Algorithm
 bool quine(CNF* formula, int** val, int n) {
@@ -58,7 +44,6 @@ bool quine(CNF* formula, int** val, int n) {
             CNF* formula3 = copy_CNF(formula);
             eval(formula3, x, false);
             if (quine(formula3, val, n)) {
-                
                 free_CNF(formula3);
                 (*val)[x - 1] = 0;
                 return true;

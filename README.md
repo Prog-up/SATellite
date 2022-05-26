@@ -16,7 +16,7 @@ Note : you need to have `gcc` installed on your computer.
 ### Windows
 Download the project, go to project's root, and execute the file `build.sh` with `Cygwin`.
 
-Note : you need to have [Cygwin](https://www.cygwin.com) installed with `gcc` on your computer.
+Note : you need to have [Cygwin](https://www.cygwin.com) (or an equivalent) installed with `gcc` on your computer.
 
 ### Running
 Once compiled, go to the folder `build`, open a terminal, and you can use the executable `SATellite` (or `SATellite.exe` on windows).
@@ -27,7 +27,7 @@ Once compiled, go to the folder `build`, open a terminal, and you can use the ex
 ./SATellite -h
 Usage : ./SATellite [-h] [-v] [-d] [-a ALGO] [-H HEUR] FILE
 
-Show whatever the input formula is satisfiable, and if so, show a model of it.
+Display the satisfiability the input formula, and if it is, print a model of it.
 
 Positional arguments :
     FILE                         Path to a cnf formula encoded in DIMACS format
@@ -58,7 +58,7 @@ Optional arguments :
 - `jw` : Jeroslow-Wang one-sided heuristic (select according to a score)
 - `jw2` : Jeroslow-Wang two-sided heuristic (select according to a score)
 
-#### Jeroslow-Wang heuristic :
+#### Jeroslow-Wang heuristic
 let $F$ be the CNF formula
 $$F = \bigwedge_{i = 1}^n c_i \quad \text{where} \quad \forall i \in \llbracket 1 ; n \rrbracket,\ c_i = \bigvee_{j = 1}^{m_i} l_{i,j}$$
 

@@ -76,6 +76,23 @@ void eval(CNF* formula, int x, bool v) {
 
 }
 
+//------Contain empty
+bool contain_empty(CNF* formula) {
+    /*Check if there is an empty clause in `formula`.*/
+
+    struct CNF_clause* f = formula->f;
+
+    while (f != NULL) {
+        if (f->c == NULL) {
+            return true;
+        }
+
+        f = f->next;
+    }
+
+    return false;
+}
+
 //------Use solver
 void use_solver(CNF* formula, char* algo, char* heur, bool verbose) {
     /*Use quine with formula and print output.*/

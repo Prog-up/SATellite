@@ -71,7 +71,7 @@ int random_h(int* val, int n) { // return a random literal
 
     while (true) {
         int l = (rand() % n);
-        if(val[l] == -1) {
+        if(val[l] == -1) { //Might not work
             return l;
         }
     }

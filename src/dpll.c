@@ -10,31 +10,26 @@
 
 #include "../include/general.h"
 #include "../include/types.h"
+#include "../include/heuristics.h"
 #include "../include/dpll.h"
 
 //------Functions
 //---Unit propagate
-CNF* unit_propagate(CNF* formula, int** val) {
+void unit_propagate(CNF* formula, int** val) {
     /*
     Search for all unit clauses, and propagate them,
     i.e evaluate `formula` for all the variables that
     appears in such clauses.
+    It modifies the formula given in input.
 
     Input :
         - formula : the formula in which propagate unit clauses ;
         - val     : the array representing the partial valuation of variables.
-    
-    Output :
-        A copy of `formula` where all variables appearing in unit clauses are removed.
     */
 
-    CNF* f_cpy = copy_CNF(formula);
+    //CNF* f_cpy = copy_CNF(formula);
 
-    //int cc = f_cpy->cc;
-    //int varc = f_cpy->varc;
-
-    struct CNF_clause* f = f_cpy->f;
-    //struct CNF_clause* f0 = f; //head
+    struct CNF_clause* f = formula->f;
 
     while (f != NULL) {
         Clause c = f->c;
@@ -51,13 +46,14 @@ CNF* unit_propagate(CNF* formula, int** val) {
                 x = l;
                 (*val)[x - 1] = 1;
             }
-            eval(f_cpy, x, (*val)[x - 1]);
+            eval(formula, x, (*val)[x - 1]);
         }
 
         f = f->next;
     }
 
-    return f_cpy; //TODO: Test this function
+    //return f_cpy;
+    //TODO: Test this function
 }
 
 
@@ -71,4 +67,41 @@ bool dpll(CNF* formula, char* heur, int** val, int n) {
     - val     : a pointer to an int array representing the values of the variables. It should first be filled with -1 ;
     - n       : the size of the array `val`. 
     */
+
+    unit_propagate(formula, val);
+
+
+    if (formula->f == NULL) {
+        return true;
+    }
+    else if (contain_empty(formula)) {
+        return false;
+    }
+    else {
+        int x = next_lit(formula, *val, n, heur);
+
+        CNF* formula2 = copy_CNF(formula);
+        eval(formula2, x, true);
+        if (dpll(formula2, heur, val, n)) {
+            (*val)[abs(x)] = true;
+            free_CNF(formula2);
+            return true;
+        }
+        else {
+            //free_CNF(formula2);
+
+            CNF* formula3 = copy_CNF(formula);
+            eval(formula3, x, false);
+
+            if (dpll(formula3, heur, val, n)) {
+                (*val)[abs(x)] = false;
+                free_CNF(formula3);
+                return true;
+            }
+            else {
+                //free_CNF(formula3);
+                return false;
+            }
+        }
+    }
 }

@@ -38,7 +38,7 @@ void print_help(char* argv0) {
 
     print_usage(argv0);
 
-    printf("\nShow whatever the input formula is satisfiable, and if so, show a model of it.\n");
+    printf("\nDisplay the satisfiability the input formula, and if it is, print a model of it.\n");
 
     printf("\nPositional arguments :\n");
     printf("    FILE                         Path to a cnf formula encoded in DIMACS format\n");
@@ -209,12 +209,11 @@ int parse(int argc, char** argv) {
         return 0;
     }
 
-    if (strcmp(algo, "quine") == 0) {
-        use_solver(f, algo, heur, verbose_is_def);
+    if (!heur_is_def) {
+        strcpy(heur, "first"); //TODO: change this to jw, and put it in the help + readme
     }
-    else if (strcmp(algo, "dpll") == 0) {
-        printf("Not implemented yet...\n");
-    }
+
+    use_solver(f, algo, heur, verbose_is_def);
 
     free_CNF(f);
 
