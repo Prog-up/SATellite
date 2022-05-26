@@ -13,6 +13,14 @@
 //------Init
 int n=1;
 
+//------Maximum
+int max(int a,int b){ //Why ?
+    if(a>=b){
+        return a;
+    }
+    return b;
+}
+
 //------Heuristics
 //---First (label order : 1, 2, 3, ...)
 int first_h(CNF* formula) { // return the first literal
@@ -78,14 +86,20 @@ int random_h(int* val, int n) { // return a random literal
 }
 
 //---Jeroslow-Wang with difference betwen a literal and it's negation
-int JeroslowWang1_h(CNF* formula) {
+int JeroslowWang_h(CNF* formula, bool diff_neg) {
     /*Jeroslow-Wang one-sided heuristic*/
 
     Clause l;
     Clause l2;
     int count;
-    int* tab = (int*) malloc ((formula->varc*2) *sizeof (int));
-    for(int i=0 ; i<formula->varc*2 ; i++){
+    int x;
+    if(diff_neg){
+        x = 2;
+    }else{
+        x = 1;
+    }
+    int* tab = (int*) malloc ((formula->varc*x) *sizeof (int));
+    for(int i=0 ; i<formula->varc*x ; i++){
         tab[i] = 0;
     } // all the cases of tab equal to 0
     struct CNF_clause* c = formula->f;
@@ -99,7 +113,9 @@ int JeroslowWang1_h(CNF* formula) {
         }
         
         while (l->next != NULL){ // parcours of literals
-            if(l->l>0){
+            if(!diff_neg){
+                tab[abs(l->l)]+=pow(2, -count);
+            }else if(l->l>0){
                 tab[l->l]+=pow(2, -count);
             }else{
                 tab[l->l+formula->varc]+=pow(2, -count);
@@ -109,9 +125,9 @@ int JeroslowWang1_h(CNF* formula) {
         c = c->next;
     }
     int max = 0, res = 0;
-    for(int j=0; j<formula->varc*2; j++){ // search the literal with better score
+    for(int j=0; j<formula->varc*x; j++){ // search the literal with better score
         if(tab[j]>max){
-            if(j<formula->varc){
+            if(!diff_neg || j<formula->varc){
                 res=j;
             }else{
                 res=-(j-formula->varc);
@@ -124,54 +140,6 @@ int JeroslowWang1_h(CNF* formula) {
 }
 
 //TODO: a function `max`, and use the function `clause_size` from types.h
-
-//---Jeroslow-Wang without difference betwen a literal and it's negation
-int JeroslowWang2_h(CNF* formula) {
-    /*Jeroslow-Wang two-sided heuristic*/
-
-    Clause l;
-    Clause l2;
-    int count;
-    int* tab = (int*) malloc ((formula->varc) *sizeof (int));
-    for(int i=0 ; i<formula->varc ; i++){
-        tab[i] = 0;
-    } // all the cases of tab equal to 0
-    struct CNF_clause* c = formula->f;
-    while (c->next != NULL){ // parcours of clauses
-        l = c->c;
-
-        l2 = c->c; // count of the literals in this clause
-        count = 0;
-        while (l2->next!=NULL){
-            count++;
-        }
-        
-        while (l->next != NULL){ // parcours of literals
-            tab[abs(l->l)]+=pow(2, -count);
-            l = l->next; 
-        }
-        c = c->next;
-    }
-    int max = 0, res = 0;
-    for(int j=0; j<formula->varc; j++){ // search the literal with better score
-        if(tab[j]>max){
-            res=j;
-            max=tab[j];
-        }
-    }
-    free(tab);
-    return res;
-}
-
-/* //---Tmp, debug
-int main_(void){
-    for(int i=0;i<100;i++){
-        print_CNF(parse_cnf("../test/SAT.cnf"));
-        printf("\n");
-        printf("%d", first_h(parse_cnf("../test/SAT.cnf")));
-    }
-    return 0;
-} */
 
 //------Next lit
 int next_lit(CNF* formula, int* val, int n, char* heur) {
@@ -190,8 +158,8 @@ int next_lit(CNF* formula, int* val, int n, char* heur) {
         return random_h(val, n);
     else if (strcmp(heur, "freq") == 0)
         return freq_h(formula);
-    else if (strcmp(heur, "jw") == 0)
-        return JeroslowWang1_h(formula);
+    else if (strcmp(heur, "jw") == 0)  //Fusion 2 JeroslowWang_h with a bool in the conditions
+        return JeroslowWang_h(formula, true);
     else //if (strcmp(heur, "jw2") == 0)
-        return JeroslowWang2_h(formula);
+        return JeroslowWang_h(formula, false);
 }
