@@ -5,15 +5,15 @@
 //---Includes
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+#include <string.h>
+#include <math.h>
 
-//#include "../include/types.h"
-#include "../include/parse_dimacs.h"
 #include "../include/heuristics.h"
 
-//---Init
+//------Init
 int n=1;
 
+//------Heuristics
 //---First (label order : 1, 2, 3, ...)
 int first_h(CNF* formula) { // return the first literal
     if (n > 0) {
@@ -61,11 +61,18 @@ int freq_h(CNF* formula) { //tabular of the most used literals
 }
 
 //---Random
-int random_h(CNF* formula, int* val){ // return a random literal
-    while(true){
-        int rd=(rand() % formula->varc+1);
-        if(val[rd]==-1){
-            return val[rd];
+int random_h(int* val, int n) { // return a random literal
+    /*
+    Return a random literal that has not already been used.
+    
+    - val : the array representing the partial valuation ;
+    - n   : the length of val.
+    */
+
+    while (true) {
+        int l = (rand() % n);
+        if(val[l] == -1) {
+            return l;
         }
     }
 }
@@ -165,3 +172,26 @@ int main_(void){
     }
     return 0;
 } */
+
+//------Next lit
+int next_lit(CNF* formula, int* val, int n, char* heur) {
+    /*
+    Return the next literal to use in dpll according to the heuristic `heur`.
+    
+    - formula : the CNF* formula ;
+    - val     : the partial valuation array of formula ;
+    - n       : the length of val ;
+    - heur    : the heuristic name (defined in main.c/parse).
+    */
+
+    if (strcmp(heur, "first") == 0)
+        return first_h(formula);
+    else if (strcmp(heur, "random") == 0)
+        return random_h(val, n);
+    else if (strcmp(heur, "freq") == 0)
+        return freq_h(formula);
+    else if (strcmp(heur, "jw") == 0)
+        return JeroslowWang1_h(formula);
+    else //if (strcmp(heur, "jw2") == 0)
+        return JeroslowWang2_h(formula);
+}

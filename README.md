@@ -43,16 +43,32 @@ Optional arguments :
         'dpll'
         
     -H HEUR, --heuristic HEUR    Select an heuristic for DPLL algorithm.
-        'random'                 Ignored if ALGO is not 'dpll'.
+        'first'                  Ignored if ALGO is not 'dpll'.
+        'random'
         'freq'
+        'jw'
+        'jw2'
                                  
 ```
 
 ### Heuristic description
+- `first` : select the first literal that is in the formula ;
 - `random` : select randomly a literal ;
 - `freq` : select the most frequent literal to build a model ;
+- `jw` : Jeroslow-Wang one-sided heuristic (select according to a score)
+- `jw2` : Jeroslow-Wang two-sided heuristic (select according to a score)
 
-...
+#### Jeroslow-Wang heuristic :
+let $F$ be the CNF formula
+$$F = \bigwedge_{i = 1}^n c_i \quad \text{where} \quad \forall i \in \llbracket 1 ; n \rrbracket,\ c_i = \bigvee_{j = 1}^{m_i} l_{i,j}$$
+
+and where $l_{i,j} = \pm x_{i, j}$ are the literals (and $x_{i,j}$ the variables).
+
+For each literal $l$ (resp. variable $x$ for the two-sided version), calculate $J(l)$ (resp. $J(x)$) :
+$$J(l) = \sum_{\substack{c \in F \\ l \in c}} 2^{-|c|}$$
+
+Then choose the literal $l$ (resp. variable) which has the maximum $J(l)$.
+
 
 ### Output description
 If the input formula is unsatisfiable, the program outputs

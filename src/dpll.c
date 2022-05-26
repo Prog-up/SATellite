@@ -57,5 +57,18 @@ CNF* unit_propagate(CNF* formula, int** val) {
         f = f->next;
     }
 
-    return f_cpy; //Test this function
+    return f_cpy; //TODO: Test this function
+}
+
+
+//---DPLL
+bool dpll(CNF* formula, char* heur, int** val, int n) {
+    /*
+    DPLL algorithm.
+    
+    - formula : the CNF* formula to try solving ;
+    - heur    : the heuristic name ;
+    - val     : a pointer to an int array representing the values of the variables. It should first be filled with -1 ;
+    - n       : the size of the array `val`. 
+    */
 }

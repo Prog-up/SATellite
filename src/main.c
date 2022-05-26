@@ -53,8 +53,11 @@ void print_help(char* argv0) {
     printf("        'quine'\n");
     printf("        'dpll'\n");
     printf("\n    -H HEUR, --heuristic HEUR    Select an heuristic for DPLL algorithm.\n");
-    printf("        'random'                 Ignored if ALGO is not 'dpll'.\n");
+    printf("        'first'                  Ignored if ALGO is not 'dpll'.\n");
+    printf("        'random'\n");
     printf("        'freq'\n");
+    printf("        'jw'\n");
+    printf("        'jw2'\n");
 }
 
 
@@ -101,15 +104,18 @@ int parse(int argc, char** argv) {
         }
         else if (strcmp(argv[k], "-a") == 0 || strcmp(argv[k], "--algorithm") == 0) { //Algorithm
             if (algo_is_def) {
+                print_usage(argv[0]);
                 printf("SATellite: error: too many arguments (argument -a/--algorithm repeated)\n");
                 return 1;
             }
 
             if (k + 1 >= argc) {
+                print_usage(argv[0]);
                 printf("SATellite: error: argument -a/--algorithm: expected one argument ALGO\n");
                 return 1;
             }
             if (strcmp(argv[k + 1], "quine") !=0 && strcmp(argv[k + 1], "dpll") != 0) {
+                print_usage(argv[0]);
                 printf("SATellite: error: argument -a/--algorithm: value should be 'quine' or 'dpll', but '%s' was found\n", argv[k + 1]);
                 return 1;
             }
@@ -121,15 +127,24 @@ int parse(int argc, char** argv) {
         }
         else if (strcmp(argv[k], "-H") == 0 || strcmp(argv[k], "--heuristic") == 0) { //Heuristic
             if (heur_is_def) {
+                print_usage(argv[0]);
                 printf("SATellite: error: too many arguments (argument -H/--heuristic repeated)\n");
                 return 1;
             }
             if (k + 1 >= argc) {
+                print_usage(argv[0]);
                 printf("SATellite: error: argument -H/--heuristic: expected one argument HEUR\n");
                 return 1;
             }
-            if (strcmp(argv[k + 1], "random") !=0 && strcmp(argv[k + 1], "freq") != 0) { //TODO: update heuristic list
-                printf("SATellite: error: argument -H/--heuristic: value should be 'random' or 'freq', but '%s' was found\n", argv[k + 1]); //TODO: also here
+            if (
+                    strcmp(argv[k + 1], "first") !=0
+                    && strcmp(argv[k + 1], "random") != 0
+                    && strcmp(argv[k + 1], "freq") != 0
+                    && strcmp(argv[k + 1], "jw") != 0
+                    && strcmp(argv[k + 1], "jw2") != 0
+            ) {
+                print_usage(argv[0]);
+                printf("SATellite: error: argument -H/--heuristic: value should be 'first', 'random', 'freq', 'jw', or 'jw2', but '%s' was found\n", argv[k + 1]);
                 return 1;
             }
 
@@ -138,8 +153,14 @@ int parse(int argc, char** argv) {
 
             heur_is_def = true;
         }
+        else if (argv[k][0] == '-') { //Wrong argument
+            print_usage(argv[0]);
+            printf("SATellite: error: unrecognized argument : '%s'\n", argv[k]);
+            return 1;
+        }
         else { //File
             if (file_is_def) {
+                print_usage(argv[0]);
                 printf("SATellite: error: too many arguments\n");
                 return 1;
             }
@@ -148,6 +169,12 @@ int parse(int argc, char** argv) {
 
             file_is_def = true;
         }
+    }
+
+    if (!file_is_def) {
+        print_usage(argv[0]);
+        printf("SATellite: error: the following argument is requied: FILE\n");
+        return 1;
     }
     
     //---Use arguments
@@ -183,7 +210,7 @@ int parse(int argc, char** argv) {
     }
 
     if (strcmp(algo, "quine") == 0) {
-        use_quine(f, verbose_is_def);
+        use_solver(f, algo, heur, verbose_is_def);
     }
     else if (strcmp(algo, "dpll") == 0) {
         printf("Not implemented yet...\n");

@@ -6,5 +6,6 @@
 
 //------Functions
 CNF* unit_propagate(CNF* formula, int** val);
+bool dpll(CNF* formula, char* heur, int** val, int n);
 
 #endif
