@@ -8,8 +8,7 @@
 int first_h(CNF* formula);
 int freq_h(CNF* formula);
 int random_h(int* val, int n);
-int JeroslowWang1_h(CNF* formula);
-int JeroslowWang2_h(CNF* formula);
+int JeroslowWang_h(CNF* formula, bool two_sided);
 
 //------Next literal
 int next_lit(CNF* formula, int* val, int n, char* heur);

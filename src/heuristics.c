@@ -14,11 +14,24 @@
 int n=1;
 
 //------Maximum
-int max(int a,int b){ //Why ?
-    if(a>=b){
-        return a;
+int max_arr(int* arr, int n) {
+    /*
+    Return the index of the maximum element of the array.
+    
+    - arr : the array to find maximum ;
+    - n   : the length of the array.
+    */
+
+    int index = 0, max = arr[0];
+
+    for (int k = 1 ; k < n ; k++) {
+        if (arr[k] > max) {
+            max = arr[k];
+            index = k;
+        }
     }
-    return b;
+
+    return index;
 }
 
 //------Heuristics
@@ -35,37 +48,38 @@ int first_h(CNF* formula) { // return the first literal
 
 
 //---Frequency
-int freq_h(CNF* formula) { //tabular of the most used literals
-    int* tab = (int*) malloc ((formula->varc*2) *sizeof (int));
-    for(int i=0 ; i<formula->varc*2 ; i++){
-        tab[i] = 0;
-    } // all the cases of tab equal to 0
+int freq_h(CNF* formula) {
+    /*Return the most frequent variable.*/
+
+    //int* freq = (int*) malloc((formula->varc*2) * sizeof(int));
+    int len = 2 * formula->varc;
+    int freq[len];
+
+    for (int i = 0 ; i < len ; i++) { //Set all values of freq to 0.
+        freq[i] = 0;
+    }
+
     struct CNF_clause* c = formula->f;
-    while (c->next != NULL){ // parcours of clauses
+    while (c->next != NULL){ // Browse clauses
         Clause l = c->c;
-        while (l->next != NULL){ // parcours of literals
-            if(l->l>0){
-                tab[l->l]++;
-            }else{
-                tab[l->l+formula->varc]++;
-            }
+
+        while (l->next != NULL){ // Browse literals
+            if(l->l > 0)
+                freq[l->l]++;
+            else
+                freq[l->l + formula->varc]++;
+            
             l = l->next; 
         }
         c = c->next;
     }
-    int max = 0, res = 0;
-    for(int j=0; j<formula->varc*2; j++){ // search the most used literal 
-        if(tab[j]>max){
-            if(j<formula->varc){
-                res=j;
-            }else{
-                res=-(j-formula->varc);
-            }
-            max=tab[j];
-        }
-    }
-    free(tab);
-    return res;
+
+    int max_i = max_arr(freq, len);
+
+    if (max_i > formula->varc)
+        max_i = formula->varc - max_i;
+    
+    return max_i + 1;
 }
 
 //---Random
@@ -79,64 +93,65 @@ int random_h(int* val, int n) { // return a random literal
 
     while (true) {
         int l = (rand() % n);
-        if(val[l] == -1) { //Might not work
+        if(val[l] == -1) { //Might not work (with recursive calls, val[l] might have been set in a previous try, but not currently).
             return l;
         }
     }
 }
 
-//---Jeroslow-Wang with difference betwen a literal and it's negation
-int JeroslowWang_h(CNF* formula, bool diff_neg) {
-    /*Jeroslow-Wang one-sided heuristic*/
+//---Jeroslow-Wang
+int JeroslowWang_h(CNF* formula, bool two_sided) {
+    /*
+    Jeroslow-Wang heuristic
+    
+    - formula   : the CNF* formula ;
+    - two_sided : indicate if use the two-sided version of JW (true) or not (the one-sided, false).
+    */
+
+    int len;
+
+    if (two_sided)
+        len = 2 * formula->varc;
+    else
+        len = formula->varc;
+
+    //int* scores = (int*) malloc(t_len * sizeof(int));
+    int scores[len];
+
+    for (int i = 0 ; i < len ; i++) { // Set scores values to 0
+        scores[i] = 0;
+    }
 
     Clause l;
-    Clause l2;
     int count;
-    int x;
-    if(diff_neg){
-        x = 2;
-    }else{
-        x = 1;
-    }
-    int* tab = (int*) malloc ((formula->varc*x) *sizeof (int));
-    for(int i=0 ; i<formula->varc*x ; i++){
-        tab[i] = 0;
-    } // all the cases of tab equal to 0
     struct CNF_clause* c = formula->f;
-    while (c->next != NULL){ // parcours of clauses
+
+    while (c->next != NULL){ // Browse clauses
         l = c->c;
 
-        l2 = c->c; // count of the literals in this clause
-        count = 0;
-        while (l2->next!=NULL){
-            count++;
-        }
+        count = clause_size(l);
         
-        while (l->next != NULL){ // parcours of literals
-            if(!diff_neg){
-                tab[abs(l->l)]+=pow(2, -count);
-            }else if(l->l>0){
-                tab[l->l]+=pow(2, -count);
-            }else{
-                tab[l->l+formula->varc]+=pow(2, -count);
+        while (l->next != NULL){ // Browse literals
+            if (!two_sided) {
+                scores[abs(l->l)] += pow(2, -count);
+            }
+            else if (l->l > 0) {
+                scores[l->l] += pow(2, -count);
+            }
+            else {
+                scores[l->l + formula->varc] += pow(2, -count);
             }
             l = l->next; 
         }
         c = c->next;
     }
-    int max = 0, res = 0;
-    for(int j=0; j<formula->varc*x; j++){ // search the literal with better score
-        if(tab[j]>max){
-            if(!diff_neg || j<formula->varc){
-                res=j;
-            }else{
-                res=-(j-formula->varc);
-            }
-            max=tab[j];
-        }
-    }
-    free(tab);
-    return res;
+
+    int max_i = max_arr(scores, len);
+
+    if (max_i > formula->varc)
+        max_i = formula->varc - max_i;
+    
+    return max_i + 1;
 }
 
 //TODO: a function `max`, and use the function `clause_size` from types.h
@@ -154,12 +169,16 @@ int next_lit(CNF* formula, int* val, int n, char* heur) {
 
     if (strcmp(heur, "first") == 0)
         return first_h(formula);
+
     else if (strcmp(heur, "random") == 0)
         return random_h(val, n);
+
     else if (strcmp(heur, "freq") == 0)
         return freq_h(formula);
-    else if (strcmp(heur, "jw") == 0)  //Fusion 2 JeroslowWang_h with a bool in the conditions
-        return JeroslowWang_h(formula, true);
-    else //if (strcmp(heur, "jw2") == 0)
+
+    else if (strcmp(heur, "jw") == 0)
         return JeroslowWang_h(formula, false);
+
+    else
+        return JeroslowWang_h(formula, true);
 }
