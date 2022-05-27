@@ -143,7 +143,7 @@ Clause del_literal(Clause c, int x) {
                     c->prev->next = c;
             }
 
-            //free(t);
+            free(t);
         }
         else
             c = c->next;
@@ -153,6 +153,7 @@ Clause del_literal(Clause c, int x) {
             printf("c == c->next ...\n");
             c->next = NULL;
             c->prev = NULL;
+            c0 = c;
             break;
         }
     }
@@ -304,6 +305,9 @@ Clause copy_clause_0(Clause c) {
         c = c->next;
     }
 
+    if (cp != NULL)
+        cp->prev = NULL;
+
     return cp;
 }
 
@@ -339,6 +343,9 @@ CNF* copy_CNF_0(CNF* formula) {
 
         f = f->next;
     }
+
+    if (f0 != NULL)
+        f0->prev = NULL;
 
     CNF* ret = (CNF*) malloc(sizeof(CNF));
     ret->cc = formula->cc;
