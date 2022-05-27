@@ -36,17 +36,14 @@ void unit_propagate(CNF* formula, int** val) {
         
         if (clause_size(c) == 1) {
             int l = c->l;
-            int x;
 
             if (l < 0) {
-                x = -l;
-                (*val)[x - 1] = 0;
+                (*val)[abs(l) - 1] = 0;
             }
             else {
-                x = l;
-                (*val)[x - 1] = 1;
+                (*val)[abs(l) - 1] = 1;
             }
-            eval(formula, x, (*val)[x - 1]);
+            eval(formula, l, true);
         }
 
         f = f->next;
@@ -81,7 +78,6 @@ bool dpll(CNF* formula, char* heur, int** val, int n) {
         return true;
     }
     else if (contain_empty(formula)) {
-        //printf("contain empty\n");
         return false;
     }
     else {
@@ -97,8 +93,6 @@ bool dpll(CNF* formula, char* heur, int** val, int n) {
         }
         else {
             //free_CNF(formula2);
-            //printf("else (x = %d) :\n", x);
-            //print_CNF(formula);
 
             CNF* formula3 = copy_CNF(formula);
             eval(formula3, x, false);

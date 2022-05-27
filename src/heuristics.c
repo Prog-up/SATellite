@@ -13,8 +13,19 @@
 //------Init
 int n=1;
 
+void print_arr(double* arr, int n) {
+    printf("[");
+    for (int k = 0 ; k < n ; k++) {
+        printf("%.3lf", arr[k]);
+
+        if (k < n - 1)
+            printf(", ");
+    }
+    printf("]\n");
+}
+
 //------Maximum
-int max_arr(int* arr, int n) {
+int max_arr(double* arr, int n) {
     /*
     Return the index of the maximum element of the array.
     
@@ -22,7 +33,8 @@ int max_arr(int* arr, int n) {
     - n   : the length of the array.
     */
 
-    int index = 0, max = arr[0];
+    int index = 0;
+    double max = arr[0];
 
     for (int k = 1 ; k < n ; k++) {
         if (arr[k] > max) {
@@ -35,28 +47,19 @@ int max_arr(int* arr, int n) {
 }
 
 //------Heuristics
-//---First (label order : 1, 2, 3, ...)
-int first_h(CNF* formula) { // return the first literal
-    /* if (n > 0) {
-        n = -n;
-    }
-    else {
-        n = 1 - n;
-    }
-    return n; */
-
+//---First
+int first_h(CNF* formula) {
     return abs(formula->f->c->l);
 }
-//TODO: or simply return formula->f->c->l (if it exists) ?
 
 
 //---Frequency
-int freq_h(CNF* formula) {
+int freq_h(CNF* formula, int n) {
     /*Return the most frequent variable.*/
 
     //int* freq = (int*) malloc((formula->varc*2) * sizeof(int));
-    int len = 2 * formula->varc;
-    int freq[len];
+    int len = 2 * n;
+    double freq[len];
 
     for (int i = 0 ; i < len ; i++) { //Set all values of freq to 0.
         freq[i] = 0;
@@ -68,9 +71,9 @@ int freq_h(CNF* formula) {
 
         while (l->next != NULL){ // Browse literals
             if(l->l > 0)
-                freq[l->l]++;
+                freq[l->l - 1]++;
             else
-                freq[l->l + formula->varc]++;
+                freq[l->l + formula->varc - 1]++;
             
             l = l->next; 
         }
@@ -96,30 +99,31 @@ int random_h(int* val, int n) { // return a random literal
 
     while (true) {
         int l = (rand() % n);
-        if(val[l] == -1) { //Might not work (with recursive calls, val[l] might have been set in a previous try, but not currently).
+        if(val[l - 1] == -1) { //Might not work (with recursive calls, val[l] might have been set in a previous try, but not currently).
             return l;
         }
     }
 }
 
 //---Jeroslow-Wang
-int JeroslowWang_h(CNF* formula, bool two_sided) {
+int JeroslowWang_h(CNF* formula, int n, bool two_sided) {
     /*
     Jeroslow-Wang heuristic
     
     - formula   : the CNF* formula ;
+    - n         : the number of variables in the full formula ;
     - two_sided : indicate if use the two-sided version of JW (true) or not (the one-sided, false).
     */
 
     int len;
 
     if (two_sided)
-        len = 2 * formula->varc;
+        len = 2 * n;
     else
-        len = formula->varc;
+        len = n;
 
-    //int* scores = (int*) malloc(t_len * sizeof(int));
-    int scores[len];
+    //double* scores = (double*) malloc(len * sizeof(double));
+    double scores[len];
 
     for (int i = 0 ; i < len ; i++) { // Set scores values to 0
         scores[i] = 0;
@@ -136,13 +140,13 @@ int JeroslowWang_h(CNF* formula, bool two_sided) {
         
         while (l->next != NULL){ // Browse literals
             if (!two_sided) {
-                scores[abs(l->l)] += pow(2, -count);
+                scores[abs(l->l) - 1] += pow(2, -count);
             }
             else if (l->l > 0) {
-                scores[l->l] += pow(2, -count);
+                scores[l->l - 1] += pow(2, -count);
             }
             else {
-                scores[l->l + formula->varc] += pow(2, -count);
+                scores[l->l + (formula->varc) - 1] += pow(2, -count);
             }
             l = l->next; 
         }
@@ -150,9 +154,10 @@ int JeroslowWang_h(CNF* formula, bool two_sided) {
     }
 
     int max_i = max_arr(scores, len);
+    //free(scores);
 
     if (max_i > formula->varc)
-        max_i = formula->varc - max_i;
+        max_i = (formula->varc) - max_i;
     
     return max_i + 1;
 }
@@ -177,11 +182,11 @@ int next_lit(CNF* formula, int* val, int n, char* heur) {
         return random_h(val, n);
 
     else if (strcmp(heur, "freq") == 0)
-        return freq_h(formula);
+        return freq_h(formula, n);
 
     else if (strcmp(heur, "jw") == 0)
-        return JeroslowWang_h(formula, false);
+        return JeroslowWang_h(formula, n, false);
 
     else
-        return JeroslowWang_h(formula, true);
+        return JeroslowWang_h(formula, n, true);
 }

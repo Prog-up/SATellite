@@ -6,9 +6,9 @@
 
 //------Heuristics
 int first_h(CNF* formula);
-int freq_h(CNF* formula);
+int freq_h(CNF* formula, int n);
 int random_h(int* val, int n);
-int JeroslowWang_h(CNF* formula, bool two_sided);
+int JeroslowWang_h(CNF* formula, int n, bool two_sided);
 
 //------Next literal
 int next_lit(CNF* formula, int* val, int n, char* heur);
