@@ -89,20 +89,19 @@ int freq_h(CNF* formula, int n) {
 }
 
 //---Random
-int random_h(int* val, int n) { // return a random literal
+int random_h(CNF* formula) { // return a random literal
     /*
     Return a random literal that has not already been used.
     
-    - val : the array representing the partial valuation ;
-    - n   : the length of val.
+    - formula : the CNF* formula ;
     */
-
-    while (true) {
-        int l = (rand() % n);
-        if(val[l - 1] == -1) { //Might not work (with recursive calls, val[l] might have been set in a previous try, but not currently).
-            return l;
-        }
+    for(int i = 0 ; i < (rand() % formula->cc) ; i++){
+        f = f->next;
     }
+    Clause c = f->c;
+    for(int j = 0 ; j < (rand() % clause_size(c)) ; j++){
+        c = c->next;
+    return c->l;
 }
 
 //---Jeroslow-Wang
@@ -179,7 +178,7 @@ int next_lit(CNF* formula, int* val, int n, char* heur) {
         return first_h(formula);
 
     else if (strcmp(heur, "random") == 0)
-        return random_h(val, n);
+        return random_h(formula);
 
     else if (strcmp(heur, "freq") == 0)
         return freq_h(formula, n);
