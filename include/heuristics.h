@@ -7,7 +7,7 @@
 //------Heuristics
 int first_h(CNF* formula);
 int freq_h(CNF* formula, int n);
-int random_h(int* val, int n);
+int random_h(CNF* formula);
 int JeroslowWang_h(CNF* formula, int n, bool two_sided);
 
 //------Next literal
