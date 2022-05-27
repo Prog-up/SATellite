@@ -38,7 +38,7 @@ void print_help(char* argv0) {
 
     print_usage(argv0);
 
-    printf("\nDisplay the satisfiability the input formula, and if it is, print a model of it.\n");
+    printf("\nDeterminate whether the input formula is satisfiable, and if it is, display a model of it.\n");
 
     printf("\nPositional arguments :\n");
     printf("    FILE                         Path to a cnf formula encoded in DIMACS format\n");
@@ -49,12 +49,12 @@ void print_help(char* argv0) {
     printf("    -t, --test                   Launch tests\n");
     printf("    -d, --display                Print the formula to the screen and exit\n");
     printf("    -v, --verbose                Be more verbose\n");
-    printf("    -a ALGO, --algorithm ALGO    Select the algorithm used. Default is 'quine'\n");
+    printf("    -a ALGO, --algorithm ALGO    Select the algorithm used. Default is 'dpll'\n");
     printf("        'quine'\n");
     printf("        'dpll'\n");
     printf("\n    -H HEUR, --heuristic HEUR    Select an heuristic for DPLL algorithm.\n");
-    printf("        'first'                  Ignored if ALGO is not 'dpll'.\n");
-    printf("        'random'\n");
+    printf("        'first'                  Ignored if ALGO is not 'dpll'. Default is\n");
+    printf("        'random'                 'first'.\n");
     printf("        'freq'\n");
     printf("        'jw'\n");
     printf("        'jw2'\n");
@@ -210,7 +210,7 @@ int parse(int argc, char** argv) {
     }
 
     if (!heur_is_def) {
-        strcpy(heur, "first"); //TODO: change this to jw, and put it in the help + readme
+        strcpy(heur, "first");
     }
 
     use_solver(f, algo, heur, verbose_is_def);

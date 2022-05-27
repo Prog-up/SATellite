@@ -27,7 +27,7 @@ Once compiled, go to the folder `build`, open a terminal, and you can use the ex
 ./SATellite -h
 Usage : ./SATellite [-h] [-v] [-d] [-a ALGO] [-H HEUR] FILE
 
-Display the satisfiability the input formula, and if it is, print a model of it.
+Determinate whether the input formula is satisfiable, and if it is, display a model of it.
 
 Positional arguments :
     FILE                         Path to a cnf formula encoded in DIMACS format
@@ -38,13 +38,13 @@ Optional arguments :
     -t, --test                   Launch tests
     -d, --display                Print the formula to the screen and exit
     -v, --verbose                Be more verbose
-    -a ALGO, --algorithm ALGO    Select solver algorithm. Default is 'quine'
+    -a ALGO, --algorithm ALGO    Select solver algorithm. Default is 'dpll'
         'quine'
         'dpll'
         
     -H HEUR, --heuristic HEUR    Select an heuristic for DPLL algorithm.
-        'first'                  Ignored if ALGO is not 'dpll'.
-        'random'
+        'first'                  Ignored if ALGO is not 'dpll'. Default is
+        'random'                 'first'.
         'freq'
         'jw'
         'jw2'

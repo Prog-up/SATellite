@@ -116,6 +116,7 @@ void use_solver(CNF* formula, char* algo, char* heur, bool verbose) {
     t = clock() - t;
     double time_taken = ((double) t) / CLOCKS_PER_SEC;
 
+    //---Display result
     if (sat) {
         printf("SATISFIABLE\n");
 

@@ -105,7 +105,7 @@ int random_h(CNF* formula) {
     for(int j = 0 ; j < rnd_l ; j++){
         c = c->next;
     }
-    
+
     return c->l;
 }
 
@@ -150,7 +150,7 @@ int JeroslowWang_h(CNF* formula, int n, bool two_sided) {
                 scores[l->l - 1] += pow(2, -count);
             }
             else {
-                scores[l->l + (formula->varc) - 1] += pow(2, -count);
+                scores[abs(l->l) + (formula->varc) - 1] += pow(2, -count);
             }
             l = l->next; 
         }
@@ -166,7 +166,6 @@ int JeroslowWang_h(CNF* formula, int n, bool two_sided) {
     return max_i + 1;
 }
 
-//TODO: a function `max`, and use the function `clause_size` from types.h
 
 //------Next lit
 int next_lit(CNF* formula, int* val, int n, char* heur) {

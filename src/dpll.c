@@ -48,9 +48,6 @@ void unit_propagate(CNF* formula, int** val) {
 
         f = f->next;
     }
-
-    //return f_cpy;
-    //TODO: Test this function
 }
 
 
@@ -65,14 +62,7 @@ bool dpll(CNF* formula, char* heur, int** val, int n) {
     - n       : the size of the array `val`. 
     */
 
-    //print_CNF(formula);
-    //printf("Unit prop :\n");
-
     unit_propagate(formula, val);
-
-    //print_CNF(formula);
-    //printf("---\n");
-
 
     if (formula->f == NULL) {
         return true;
@@ -82,7 +72,6 @@ bool dpll(CNF* formula, char* heur, int** val, int n) {
     }
     else {
         int x = next_lit(formula, *val, n, heur);
-        //printf("x : %d\n", x);
 
         CNF* formula2 = copy_CNF(formula);
         eval(formula2, x, true);
