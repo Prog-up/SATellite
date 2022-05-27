@@ -65,7 +65,7 @@ int parse(int argc, char** argv) {
     /*Parse command line arguments and execute associated functions.*/
 
     //---Init
-    char algo[6] = "quine";
+    char algo[6] = "dpll";
     char heur[16];
     char fn[255];
 
