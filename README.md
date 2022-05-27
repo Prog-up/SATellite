@@ -60,7 +60,7 @@ Optional arguments :
 
 #### Jeroslow-Wang heuristic
 let $F$ be the CNF formula
-$$F = \bigwedge_{i = 1}^n c_i \quad \text{where} \quad \forall i \in \llbracket 1 ; n \rrbracket,\ c_i = \bigvee_{j = 1}^{m_i} l_{i,j}$$
+$$F = \bigwedge_{i = 1}^n c_i \quad \text{where} \quad \forall i \in [1 ; n] \cap \mathbb N,\ c_i = \bigvee_{j = 1}^{m_i} l_{i,j}$$
 
 and where $l_{i,j} = \pm x_{i, j}$ are the literals (and $x_{i,j}$ the variables).
 
