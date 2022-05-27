@@ -89,18 +89,23 @@ int freq_h(CNF* formula, int n) {
 }
 
 //---Random
-int random_h(CNF* formula) { // return a random literal
-    /*
-    Return a random literal that has not already been used.
-    
-    - formula : the CNF* formula ;
-    */
-    for(int i = 0 ; i < (rand() % formula->cc) ; i++){
+int random_h(CNF* formula) {
+    /*Return a random literal that has not already been used.*/
+
+    struct CNF_clause* f = formula->f;
+    int rnd_c = rand() % formula->cc;
+
+    for (int i = 0 ; i < rnd_c ; i++) {
         f = f->next;
     }
+
     Clause c = f->c;
-    for(int j = 0 ; j < (rand() % clause_size(c)) ; j++){
+    int rnd_l = rand() % clause_size(c);
+
+    for(int j = 0 ; j < rnd_l ; j++){
         c = c->next;
+    }
+    
     return c->l;
 }
 
