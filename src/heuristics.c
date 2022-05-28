@@ -150,7 +150,7 @@ int JeroslowWang_h(CNF* formula, int n, bool two_sided) {
                 scores[l->l - 1] += pow(2, -count);
             }
             else {
-                scores[abs(l->l) + (formula->varc) - 1] += pow(2, -count);
+                scores[l->l + (formula->varc) - 1] += pow(2, -count);
             }
             l = l->next; 
         }
