@@ -11,6 +11,6 @@ int random_h(CNF* formula);
 int JeroslowWang_h(CNF* formula, int n, bool two_sided);
 
 //------Next literal
-int next_lit(CNF* formula, int* val, int n, char* heur);
+int next_lit(CNF* formula, int n, char* heur);
 
 #endif

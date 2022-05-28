@@ -168,7 +168,7 @@ int JeroslowWang_h(CNF* formula, int n, bool two_sided) {
 
 
 //------Next lit
-int next_lit(CNF* formula, int* val, int n, char* heur) {
+int next_lit(CNF* formula, int n, char* heur) {
     /*
     Return the next literal to use in dpll according to the heuristic `heur`.
     

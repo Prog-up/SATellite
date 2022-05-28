@@ -71,7 +71,7 @@ bool dpll(CNF* formula, char* heur, int** val, int n) {
         return false;
     }
     else {
-        int x = next_lit(formula, *val, n, heur);
+        int x = next_lit(formula, n, heur);
 
         CNF* formula2 = copy_CNF(formula);
         eval(formula2, x, true);
