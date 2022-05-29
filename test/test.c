@@ -23,6 +23,14 @@ void print_cnf_files(){
   }
 }
 
+bool sat_test (char d_name) {
+  if (dpll(dir->d_name) = TRUE) return TRUE ;
+  else if (quine(dir->d_name) = TRUE) return TRUE ;
+  else return false ; // the formula is unsatisfiable
+}
+
+
+
 //---TMP
 int main(void){
     print_cnf_files();
