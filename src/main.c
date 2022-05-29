@@ -14,6 +14,7 @@
 #include "../include/parse_dimacs.h"
 #include "../include/quine.h"
 #include "../include/general.h"
+#include "../include/test.h"
 
 //---Ini
 char version[] = "v1.0";
@@ -72,7 +73,6 @@ int parse(int argc, char** argv) {
     bool file_is_def = false;
     bool algo_is_def = false;
     bool heur_is_def = false;
-    bool test_is_def = false;
     bool display_is_def = false;
     bool verbose_is_def = false;
 
@@ -94,7 +94,11 @@ int parse(int argc, char** argv) {
             return 0;
         }
         else if (strcmp(argv[k], "-t") == 0 || strcmp(argv[k], "--test") == 0) { //Tests
-            test_is_def = true;
+            printf("Testing ...\n");
+
+            if (test_all())
+                return 0;
+            return 1;
         }
         else if (strcmp(argv[k], "-d") == 0 || strcmp(argv[k], "--display") == 0) { //Print formula
             display_is_def = true;
@@ -181,27 +185,6 @@ int parse(int argc, char** argv) {
     CNF* f = parse_cnf(fn);
     if (f == NULL)
         return 1;
-    
-    if (test_is_def) {
-        printf("Testing ...\n");
-        printf("TODO\n");
-        
-        //---------Tests---------
-        CNF* f2 = copy_CNF(f);
-        eval(f2, 12, true);
-        print_CNF(f2);
-        free_CNF(f2);
-
-        CNF* f3 = copy_CNF(f);
-        eval(f3, 12, false);
-        print_CNF(f3);
-        free_CNF(f3);
-
-        free_CNF(f);
-        //-----------------------
-
-        return 0;
-    }
 
     if (display_is_def) {
         print_CNF(f);

@@ -39,7 +39,7 @@ bool quine(CNF* formula, int** val, int n) {
             return true;
         }
         else {
-            //free_CNF(formula2);
+            free_CNF(formula2);
 
             CNF* formula3 = copy_CNF(formula);
             eval(formula3, x, false);
@@ -49,7 +49,7 @@ bool quine(CNF* formula, int** val, int n) {
                 return true;
             }
             else {
-                //free_CNF(formula3);
+                free_CNF(formula3);
                 return false;
             }
         }

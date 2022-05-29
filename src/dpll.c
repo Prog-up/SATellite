@@ -81,7 +81,7 @@ bool dpll(CNF* formula, char* heur, int** val, int n) {
             return true;
         }
         else {
-            //free_CNF(formula2);
+            free_CNF(formula2);
 
             CNF* formula3 = copy_CNF(formula);
             eval(formula3, x, false);
@@ -92,7 +92,7 @@ bool dpll(CNF* formula, char* heur, int** val, int n) {
                 return true;
             }
             else {
-                //free_CNF(formula3);
+                free_CNF(formula3);
                 return false;
             }
         }
