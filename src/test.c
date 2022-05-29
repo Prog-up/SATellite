@@ -171,7 +171,7 @@ bool test_all() {
             if (!test_dir(sat_dirs[j], true, "dpll", heurs[i]))
                 return false;
 
-            if (j != 4 && !test_dir(unsat_dirs[j], false, "dpll", heurs[i]))
+            if (j != 3 && !test_dir(unsat_dirs[j], false, "dpll", heurs[i]))
                 return false;
         }
     }
